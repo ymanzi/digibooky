@@ -1,7 +1,7 @@
 # Digibooky
 
 Daily Stand-Up:
-
+ 
 Daily stand up at 9.05 am <br>
 different person as scrum master each day  <br>
 <h3>daily stand up : </h3>
