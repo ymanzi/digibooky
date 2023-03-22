@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.FactoryBasedNavigableListAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,7 +21,7 @@ public class MemberRepositoryTest {
         memberRepository = new MemberRepository();
         member = new Member.MemberBuilder()
                 .withINSS("123-456-789")
-                .withFirstName("Bill")
+                .withFirstname("Bill")
                 .withLastName("Gates")
                 .withEmail("bill@microsoft.com")
                 .withAddress(new Address("", "", "", "Seattle"))
@@ -30,7 +31,7 @@ public class MemberRepositoryTest {
 
     @Test
     void Save_WhenAMemberIsSaved_ThenRepoContainsThisMember(){
-        assertThat(memberRepository.getrepo().contains(member));
+        assertTrue(memberRepository.getAllMembers().contains(member));
     }
 
     @Test
@@ -43,8 +44,9 @@ public class MemberRepositoryTest {
         assertThrows(EmailAlreadyExistsException.class, () -> memberRepository.save(member2));
     }
 
+
     @Test
-    void checkIfUniqueINSS_WhenASecondMemberWithSameINSSIsCreated_ThenThrowsException(){
+    void checkIfUniqueINSS_WhenASecondMemberWithSameINSSIsCreated_ThenThrowsException() {
         Member member2 = new Member.MemberBuilder()
                 .withINSS("123-456-789")
                 .withLastName("Turner")
@@ -61,15 +63,15 @@ public class MemberRepositoryTest {
                 .withAddress(new Address("", "", "", "Mexico"))
                 .build();
         memberRepository.save(member2);
-        List<Member> allMembers = memberRepository.getAllMembers();
+        Collection<Member> allMembers = memberRepository.getAllMembers();
         assertEquals(2, allMembers.size());
         assertTrue(allMembers.contains(member));
         assertTrue(allMembers.contains(member2));
     }
 
     @Test
-    void testGetMemberByID_GivenAnID(){
-        Member memberWithID = Member.MemberBuilder()
-
+    void testGetMemberByID_WhenAnIdIsProvided_ThenReturnTheMember(){
+        UUID Id = member.getId();
+        assertEquals(member, memberRepository.getMemberById(Id));
     }
 }
