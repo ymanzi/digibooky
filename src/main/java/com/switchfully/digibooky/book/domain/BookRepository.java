@@ -40,7 +40,6 @@ public class BookRepository {
     }
 
     public List<Book> getByTitle(String title){
-        Pattern pattern = Pattern.compile(title, Pattern.CASE_INSENSITIVE);
 
         List<Book> listOfFoundBooks = booksByIsbn
                 .values()
