@@ -1,5 +1,10 @@
 package com.switchfully.digibooky.member.domain;
 
+import com.switchfully.digibooky.member.domain.exceptions.CityInAddressMissingException;
+import com.switchfully.digibooky.member.domain.exceptions.InvalidEmailFormatException;
+import com.switchfully.digibooky.member.domain.exceptions.InvalidINSSFormatException;
+import com.switchfully.digibooky.member.domain.exceptions.LastNameMissingException;
+
 import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -77,7 +82,7 @@ public class Member {
             if (matcher.find())
                 this.INSS = INSS;
             else
-                throw new RuntimeException("placeHolder");
+                throw new InvalidINSSFormatException("Invalid INSS provided: " + INSS );
             return this;
         }
 
@@ -88,7 +93,7 @@ public class Member {
 
         public MemberBuilder withLastName(String lastName) {
             if (lastName == null || lastName.isEmpty())
-                throw new RuntimeException();
+                throw new LastNameMissingException("Last name is missing");
             this.lastName = lastName;
             return this;
         }
@@ -99,13 +104,13 @@ public class Member {
             if (matcher.find())
                 this.email = email;
             else
-                throw new RuntimeException("placeholder");
+                throw new InvalidEmailFormatException("Invalid email: " + email);
             return this;
         }
 
         public MemberBuilder withAddress(Address address) {
             if (address == null|| address.city() == null || address.city().isEmpty())
-                throw new RuntimeException("placeholder");
+                throw new CityInAddressMissingException("Missing city in address");
             this.address = address;
             return this;
         }

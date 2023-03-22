@@ -1,5 +1,6 @@
 package com.switchfully.digibooky.member.domain;
 
+import com.switchfully.digibooky.member.domain.exceptions.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
