@@ -1,5 +1,6 @@
 package com.switchfully.digibooky.member.domain;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,7 +15,7 @@ public class MemberTest {
         address = new Address("Main Street", "1150", "12125", "New-York City");
         member1 = new Member.MemberBuilder()
                 .withINSS("123-456-789")
-                .withFirstName("François")
+                .withFirstname("François")
                 .withLastName("Pignon")
                 .withEmail("francoispignon@gmail.com")
                 .withAddress(address)
@@ -25,65 +26,88 @@ public class MemberTest {
     void testCreateMemberWithAllFieldsFilledIn(){
         assertNotNull(member1);
         assertEquals("123-456-789", member1.getINSS());
-        assertEquals("François", member1.getFirstName());
+        assertEquals("François", member1.getFirstname());
         assertEquals("Pignon", member1.getLastName());
         assertEquals("francoispignon@gmail.com", member1.getEmail());
-        assertEquals("Main Street", member1.getAddress().getStreet());
-        assertEquals("1150", member1.getAddress().getNumber());
-        assertEquals("12125", member1.getAddress().getZipCode());
-        assertEquals("New-York City", member1.getAddress().getCity());
+        assertEquals("Main Street", member1.getAddress().streetName());
+        assertEquals("1150", member1.getAddress().streetNumber());
+        assertEquals("12125", member1.getAddress().postalCode());
+        assertEquals("New-York City", member1.getAddress().city());
     }
 
     @Test
     void testCreateMemberWithOnlyNeededFieldsFilledIn(){
         Member memberAda = new Member.MemberBuilder()
+                .withINSS("581-673-645")
+                .withEmail("adalovelace@computerscience.com")
                 .withLastName("Lovelace")
                 .withAddress(new Address(null, null, null, "Washington DC"))
                 .build();
 
         assertNotNull(memberAda);
+        assertNotNull(memberAda.getINSS());
+        assertNotNull(memberAda.getLastName());
+        assertNotNull(memberAda.getEmail());
         assertNotNull(memberAda.getAddress());
-        assertNotNull(memberAda.getAddress().getCity());
-        assertNull(memberAda.getINSS());
-        assertNull(memberAda.getFirstName());
-        assertNull(memberAda.getINSS());
-        assertNull(memberAda.getEmail());
-        assertNull(memberAda.getAddress().getStreet());
-        assertNull(memberAda.getAddress().getNumber());
-        assertNull(memberAda.getAddress().getZipCode());
+        assertNotNull(memberAda.getAddress().city());
     }
 
     @Test
-    void test_GivenRequiredFieldNotFilledIn_ThenThrowException(){
-        assertThrows(MissingLastNameFieldException.class, () -> new Member("123-456-789", "Ada", "", "johndoe@example.com", new Address("", "", "", "Princetown")));
-
+    void test_GivenRequiredFieldINSSNotFilledIn_ThenThrowException(){
+        assertThrows(INSSMissingException.class, () -> new Member.MemberBuilder()
+                .withLastName("Lovelace")
+                .withEmail("adalovelace@harvard.edu")
+                .withAddress(new Address("", "", "", "London"))
+                .build());
     }
 
+    @Test
+    void test_GivenRequiredFieldLastNameNotFilledIn_ThenThrowException(){
+        assertThrows(LastNameMissingException.class, () -> new Member.MemberBuilder()
+                .withINSS("672-681-346")
+                .withEmail("adalovelace@harvard.edu")
+                .withAddress(new Address("", "", "", "London"))
+                .build());
+    }
+
+    @Test
+    void test_GivenRequiredFieldEmailNotFilledIn_ThenThrowException() {
+        assertThrows(EmailMissingException.class, () -> new Member.MemberBuilder()
+                .withLastName("Lovelace")
+                .withINSS("672-681-346")
+                .withAddress(new Address("", "", "", "London"))
+                .build());
+    }
     @Test
     void test_GivenRequiredFieldCityInAddress_ThenThrowException(){
-        assertThrows(MissingCityFieldException.class, () -> new Member("123-456-789", "", "Lovelace", "janedoe@example.com", new Address("", "", "", "")));
+        assertThrows(CityInAddressMissingException.class, () -> new Member.MemberBuilder()
+                .withINSS("672-681-346")
+                .withLastName("Lovelace")
+                .withEmail("adalovelace@harvard.edu")
+                .withAddress(new Address("", "", "", ""))
+                .build());
     }
 
     @Test
     public void testValidEmailFormat() {
-        assertThrows(InvalidEmailFormatException.class, () -> new Member.MemberBuilder()
+        Assertions.assertThrows(InvalidEmailFormatException.class, () -> new Member.MemberBuilder()
                 .withINSS("123-456-789")
                 .withLastName("Jordan")
-                .withFirstName("Michael")
+                .withFirstname("Michael")
                 .withEmail("michaeljordan@gmail")
                 .withAddress(address)
                 .build());
-        assertThrows(InvalidEmailFormatException.class, () -> new Member.MemberBuilder()
+        Assertions.assertThrows(InvalidEmailFormatException.class, () -> new Member.MemberBuilder()
                 .withINSS("123-456-789-012")
                 .withLastName("James")
-                .withFirstName("Lebron")
+                .withFirstname("Lebron")
                 .withEmail("lebronjames.com")
                 .withAddress(address)
                 .build());
-        assertThrows(InvalidEmailFormatException.class, () -> new Member.MemberBuilder()
-                .withINSS("123-456-789-0124-15")
+        Assertions.assertThrows(InvalidEmailFormatException.class, () -> new Member.MemberBuilder()
+                .withINSS("123-456-789-012")
                 .withLastName("Bryant")
-                .withFirstName("Kobe")
+                .withFirstname("Kobe")
                 .withEmail("kobebryant@gmail.")
                 .withAddress(address)
                 .build());
@@ -94,14 +118,14 @@ public class MemberTest {
         assertThrows(InvalidINSSFormatException.class, () -> new Member.MemberBuilder()
                 .withINSS("123-456-")
                 .withLastName("Jordan")
-                .withFirstName("Michael")
+                .withFirstname("Michael")
                 .withEmail("michaeljordan@gmail.com")
                 .withAddress(address)
                 .build());
         assertThrows(InvalidINSSFormatException.class, () -> new Member.MemberBuilder()
                 .withINSS("123-456-789-0124-15")
                 .withLastName("James")
-                .withFirstName("Lebron")
+                .withFirstname("Lebron")
                 .withEmail("lebronjames@gmail.com")
                 .withAddress(address)
                 .build());
