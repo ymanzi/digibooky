@@ -1,4 +1,4 @@
-package com.switchfully.digibooky.member.service;
+package com.switchfully.digibooky.member.service.dtos;
 
 import com.switchfully.digibooky.member.domain.Address;
 import com.switchfully.digibooky.member.domain.Role;

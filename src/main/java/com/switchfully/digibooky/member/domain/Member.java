@@ -1,5 +1,7 @@
 package com.switchfully.digibooky.member.domain;
 
+import com.switchfully.digibooky.member.domain.exceptions.*;
+
 import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -51,6 +53,10 @@ public class Member {
         return role;
     }
 
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -72,12 +78,12 @@ public class Member {
         private Role role;
 
         public MemberBuilder withINSS(String INSS) {
-            Pattern pattern = Pattern.compile("^([0-9]-){2,3}[0-9]{3}$");
+            Pattern pattern = Pattern.compile("^([0-9]{3}-){2,3}[0-9]{3}$");
             Matcher matcher = pattern.matcher(INSS);
-            if (matcher.find())
+            if (matcher.matches())
                 this.INSS = INSS;
             else
-                throw new RuntimeException("placeHolder");
+                throw new InvalidINSSFormatException("Invalid INSS provided: " + INSS );
             return this;
         }
 
@@ -88,7 +94,7 @@ public class Member {
 
         public MemberBuilder withLastName(String lastName) {
             if (lastName == null || lastName.isEmpty())
-                throw new RuntimeException();
+                throw new LastNameMissingException("Last name is missing");
             this.lastName = lastName;
             return this;
         }
@@ -96,16 +102,16 @@ public class Member {
         public MemberBuilder withEmail(String email) {
             Pattern pattern = Pattern.compile("^[a-zA-Z0-9]+@[a-z]+[.][a-z]+$");
             Matcher matcher = pattern.matcher(email);
-            if (matcher.find())
+            if (matcher.matches())
                 this.email = email;
             else
-                throw new RuntimeException("placeholder");
+                throw new InvalidEmailFormatException("Invalid email: " + email);
             return this;
         }
 
         public MemberBuilder withAddress(Address address) {
             if (address == null|| address.city() == null || address.city().isEmpty())
-                throw new RuntimeException("placeholder");
+                throw new CityInAddressMissingException("Missing city in address");
             this.address = address;
             return this;
         }
@@ -114,6 +120,12 @@ public class Member {
             return this;
         }
         public Member build(){
+            if (INSS == null)
+                throw new INSSMissingException();
+            if (email == null)
+                throw new EmailMissingException();
+            if (lastName == null)
+                throw new LastNameMissingException();
             return new Member(INSS,firstname,lastName,email,address,role);
         }
     }

@@ -1,5 +1,8 @@
 package com.switchfully.digibooky.member.domain;
 
+import com.switchfully.digibooky.member.domain.exceptions.EmailAlreadyExistsException;
+import com.switchfully.digibooky.member.domain.exceptions.INSSAlreadyExistsException;
+import com.switchfully.digibooky.member.domain.exceptions.INSSMissingException;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
@@ -26,7 +29,8 @@ public class MemberRepository {
     public Member save(Member newMember){
         checkIfUniqueINSS(newMember);
         checkIfUniqueEmail(newMember);
-        return memberByUUIDRepository.put(newMember.getId(),newMember);
+        memberByUUIDRepository.put(newMember.getId(),newMember);
+        return newMember;
     }
 
     private void checkIfUniqueEmail(Member newMember) {
@@ -36,7 +40,7 @@ public class MemberRepository {
                 .findFirst()
                 .orElse(null);
         if (validateNotPresent != null)
-            throw new RuntimeException("placeholder");
+            throw new EmailAlreadyExistsException("Email is already in database");
     }
 
     private void checkIfUniqueINSS (Member newMember) {
@@ -46,12 +50,16 @@ public class MemberRepository {
                 .findFirst()
                 .orElse(null);
         if (validateNotPresent != null)
-            throw new RuntimeException("placeholder");
+            throw new INSSAlreadyExistsException("INSS is already in database");
     }
     public Collection<Member> getAllMembers(){
         return memberByUUIDRepository.values();
     }
     public Member getMemberById(UUID id){
         return memberByUUIDRepository.get(id);
+    }
+
+    public String getAdminId() {
+         return memberByUUIDRepository.values().stream().filter(member -> member.getRole().equals(Role.ADMIN)).findFirst().get().getId().toString();
     }
 }

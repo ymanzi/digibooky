@@ -1,14 +1,13 @@
 package com.switchfully.digibooky.member.domain;
 
-import com.google.common.collect.Lists;
+import com.switchfully.digibooky.member.domain.exceptions.EmailAlreadyExistsException;
+import com.switchfully.digibooky.member.domain.exceptions.INSSAlreadyExistsException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 
-import static org.assertj.core.api.FactoryBasedNavigableListAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MemberRepositoryTest {
