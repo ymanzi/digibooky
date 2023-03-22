@@ -27,19 +27,19 @@ public class BookController {
 
     @GetMapping(path = "/isbn/{isbn}", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public BookDto getByIsbn(@PathVariable String isbn){
+    public List<BookDto> getByIsbn(@PathVariable String isbn){
         return bookService.getByIsbn(isbn);
     }
 
     @GetMapping(path = "/author", consumes = "application/json",produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public BookDto getByAuthor(@RequestBody AuthorDto authorDto){
+    public List<BookDto> getByAuthor(@RequestBody AuthorDto authorDto){
         return bookService.getByAuthor(authorDto);
     }
 
     @GetMapping(path = "/title/{title}", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public BookDto getByTitle(@PathVariable String title){
+    public List<BookDto> getByTitle(@PathVariable String title){
         return bookService.getByTitle(title);
     }
 
