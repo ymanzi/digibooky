@@ -1,7 +1,10 @@
 package com.switchfully.digibooky.member.service;
 
+import com.switchfully.digibooky.member.domain.Member;
 import com.switchfully.digibooky.member.domain.MemberRepository;
 import com.switchfully.digibooky.member.domain.Role;
+import com.switchfully.digibooky.member.service.dtos.CreateMemberDto;
+import com.switchfully.digibooky.member.service.dtos.MemberDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,5 +24,21 @@ public class MemberService {
             throw new RuntimeException("placeholder, should be 403");
         }
         return mapper.memberListToDto(repository.getAllMembers());
+    }
+
+    public MemberDto registerMember(CreateMemberDto memberDto) {
+        Member member = repository.save(mapper.fromDto(memberDto, Role.MEMBER));
+        return mapper.toDto(member);
+    }
+
+    public MemberDto registerLibrarian(CreateMemberDto memberDto, String id) {
+        if (repository.getMemberById(UUID.fromString(id)).getRole() != Role.ADMIN){
+            throw new RuntimeException("placeholder");
+        }
+        return mapper.toDto(repository.save(mapper.fromDto(memberDto, Role.LIBRARIAN)));
+    }
+
+    public String getAdminId() {
+        return repository.getAdminId();
     }
 }

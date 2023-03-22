@@ -26,7 +26,8 @@ public class MemberRepository {
     public Member save(Member newMember){
         checkIfUniqueINSS(newMember);
         checkIfUniqueEmail(newMember);
-        return memberByUUIDRepository.put(newMember.getId(),newMember);
+        memberByUUIDRepository.put(newMember.getId(),newMember);
+        return newMember;
     }
 
     private void checkIfUniqueEmail(Member newMember) {
@@ -53,5 +54,9 @@ public class MemberRepository {
     }
     public Member getMemberById(UUID id){
         return memberByUUIDRepository.get(id);
+    }
+
+    public String getAdminId() {
+         return memberByUUIDRepository.values().stream().filter(member -> member.getRole().equals(Role.ADMIN)).findFirst().get().getId().toString();
     }
 }

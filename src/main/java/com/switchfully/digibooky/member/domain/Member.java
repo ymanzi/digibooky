@@ -51,6 +51,10 @@ public class Member {
         return role;
     }
 
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -72,9 +76,9 @@ public class Member {
         private Role role;
 
         public MemberBuilder withINSS(String INSS) {
-            Pattern pattern = Pattern.compile("^([0-9]-){2,3}[0-9]{3}$");
+            Pattern pattern = Pattern.compile("^([0-9]{3}-){2,3}[0-9]{3}$");
             Matcher matcher = pattern.matcher(INSS);
-            if (matcher.find())
+            if (matcher.matches())
                 this.INSS = INSS;
             else
                 throw new RuntimeException("placeHolder");
@@ -96,7 +100,7 @@ public class Member {
         public MemberBuilder withEmail(String email) {
             Pattern pattern = Pattern.compile("^[a-zA-Z0-9]+@[a-z]+[.][a-z]+$");
             Matcher matcher = pattern.matcher(email);
-            if (matcher.find())
+            if (matcher.matches())
                 this.email = email;
             else
                 throw new RuntimeException("placeholder");
