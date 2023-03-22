@@ -80,7 +80,7 @@ class BookRepositoryTest {
         //When
         Book theDesiredBook = bookRepository.getByTitle(theBookIWant.getTitle());
         //Then
-        assertThat(theDesiredBook).isEqualTo(theBookIWant);
+        assertThat(theDesiredBook).containsExactly(theBookIWant);
     }
 
     @Test

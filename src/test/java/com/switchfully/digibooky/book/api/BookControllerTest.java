@@ -64,10 +64,10 @@ class BookControllerTest {
         BookDto book1 = new BookDto("isbn1", "title1", new Author("first1", "last1"), "1");
 
         //When
-        BookDto book = bookController.getByIsbn("isbn1");
+        List<BookDto> book = bookController.getByIsbn("isbn1");
 
         //Then
-        assertThat(book).isEqualTo(book1);
+        assertThat(book).containsExactly(book1);
     }
 
     @Test
@@ -84,10 +84,10 @@ class BookControllerTest {
         BookDto book1 = new BookDto("isbn1", "title1", new Author("first1", "last1"), "1");
 
         //When
-        BookDto book = bookController.getByTitle("title1");
+        List<BookDto> book = bookController.getByTitle("title1");
 
         //Then
-        assertThat(book).isEqualTo(book1);
+        assertThat(book).containsExactly(book1);
     }
 
     @Test
@@ -105,10 +105,10 @@ class BookControllerTest {
         BookDto book1 = new BookDto("isbn1", "title1", new Author("first1", "last1"), "1");
 
         //When
-        BookDto book = bookController.getByAuthor(new AuthorDto("first1", "last1"));
+        List<BookDto> listOfBooks = bookController.getByAuthor(new AuthorDto("first1", "last1"));
 
         //Then
-        assertThat(book).isEqualTo(book1);
+        assertThat(listOfBooks).containsExactly(book1);
     }
 
     @Test
