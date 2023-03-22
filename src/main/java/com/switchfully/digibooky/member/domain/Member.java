@@ -1,9 +1,6 @@
 package com.switchfully.digibooky.member.domain;
 
-import com.switchfully.digibooky.member.domain.exceptions.CityInAddressMissingException;
-import com.switchfully.digibooky.member.domain.exceptions.InvalidEmailFormatException;
-import com.switchfully.digibooky.member.domain.exceptions.InvalidINSSFormatException;
-import com.switchfully.digibooky.member.domain.exceptions.LastNameMissingException;
+import com.switchfully.digibooky.member.domain.exceptions.*;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -123,6 +120,12 @@ public class Member {
             return this;
         }
         public Member build(){
+            if (INSS == null)
+                throw new INSSMissingException();
+            if (email == null)
+                throw new EmailMissingException();
+            if (lastName == null)
+                throw new LastNameMissingException();
             return new Member(INSS,firstname,lastName,email,address,role);
         }
     }
