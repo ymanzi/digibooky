@@ -43,14 +43,14 @@ public class BookService {
         return bookMapper.toDto(book);
     }
 
-    public BookDto getByAuthor(AuthorDto authorDto){
+    public List<BookDto> getByAuthor(AuthorDto authorDto){
         if (authorDto == null){
             throw new NoBookByAuthorException();
         }
 
         Author author =  authorMapper.fromDto(authorDto);
-        Book book = bookRepository.getByAuthor(author);
-        return bookMapper.toDto(book);
+        List<Book> listOfBooks = bookRepository.getByAuthor(author);
+        return bookMapper.toDto(listOfBooks);
     }
 
     public BookDto save(BookDto bookDto){
