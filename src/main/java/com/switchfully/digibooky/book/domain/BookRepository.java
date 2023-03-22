@@ -6,28 +6,27 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
 public class BookRepository {
-    private final ConcurrentHashMap<String, Book> booksByIsbn;
+    private final ConcurrentHashMap<String, Book> booksByIsbnRepository;
 
     public BookRepository() {
-        this.booksByIsbn = new ConcurrentHashMap<>();
+        this.booksByIsbnRepository = new ConcurrentHashMap<>();
     }
 
     public Collection<Book> getAll(){
-        return booksByIsbn.values();
+        return booksByIsbnRepository.values();
     }
 
     public Book save(Book book){
-        booksByIsbn.put(book.getIsbn(), book);
-        return book;
+        return booksByIsbnRepository.put(book.getIsbn(), book);
     }
 
     public Book getByIsbn(String isbn){
-        Book foundBook = booksByIsbn.get(isbn);
+        Book foundBook = booksByIsbnRepository.get(isbn);
         return checkIfBookExists(foundBook);
     }
 
     public Book getByTitle(String title){
-        Book foundBook = booksByIsbn
+        Book foundBook = booksByIsbnRepository
                 .values()
                 .stream()
                 .filter(book -> book.getTitle().equals(title))
@@ -37,7 +36,7 @@ public class BookRepository {
     }
 
     public Book getByAuthor(Author author){
-        Book foundBook = booksByIsbn
+        Book foundBook = booksByIsbnRepository
                 .values()
                 .stream()
                 .filter(book -> book.getAuthor().equals(author))
