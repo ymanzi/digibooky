@@ -1,8 +1,15 @@
 package com.switchfully.digibooky.book.domain;
 
+import com.switchfully.digibooky.book.exceptions.NoBookByAuthorException;
+import com.switchfully.digibooky.book.exceptions.NoBookByIsbnException;
+import com.switchfully.digibooky.book.exceptions.NoBookByTitleException;
 import org.springframework.stereotype.Repository;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Repository
 public class BookRepository {
@@ -21,36 +28,56 @@ public class BookRepository {
         return book;
     }
 
-    public Book getByIsbn(String isbn){
-        Book foundBook = booksByIsbn.get(isbn);
-        return checkIfBookExists(foundBook);
-    }
-
-    public Book getByTitle(String title){
-        Book foundBook = booksByIsbn
+    public List<Book> getByIsbn(String isbn){
+        Pattern pattern = Pattern.compile(isbn, Pattern.CASE_INSENSITIVE);
+        List<Book> listOfFoundBooks = booksByIsbn
                 .values()
                 .stream()
-                .filter(book -> book.getTitle().equals(title))
-                .findFirst()
-                .orElse(null);
-        return checkIfBookExists(foundBook);
+                .filter(book -> pattern.matcher(book.getIsbn()).find())
+                .collect(Collectors.toList());
+
+        return checkIfBookExists(listOfFoundBooks, "isbn");
     }
 
-    public Book getByAuthor(Author author){
-        Book foundBook = booksByIsbn
+    /*public boolean checkWildcard (String input){
+
+    }
+
+    public String changeStringWithAsteriskToRegex(String input){
+
+    }*/
+
+    public List<Book> getByTitle(String title){
+        Pattern pattern = Pattern.compile(title, Pattern.CASE_INSENSITIVE);
+
+        List<Book> listOfFoundBooks = booksByIsbn
+                .values()
+                .stream()
+                .filter(book -> pattern.matcher(book.getTitle()).find())
+                .collect(Collectors.toList());
+
+        return checkIfBookExists(listOfFoundBooks, "title");
+    }
+
+    public List<Book> getByAuthor(Author author){
+        List<Book> listOfFoundBooks = booksByIsbn
                 .values()
                 .stream()
                 .filter(book -> book.getAuthor().equals(author))
-                .findFirst()
-                .orElse(null);
-        return checkIfBookExists(foundBook);
+                .collect(Collectors.toList());
+
+        return checkIfBookExists(listOfFoundBooks, "author");
     }
 
-    public Book checkIfBookExists(Book book){
-        if (book == null /*|| book.isDeleted()*/){
-            //placeholder
-            throw new RuntimeException("PLACEHOLDER");
+
+    public List<Book> checkIfBookExists(List<Book> listOfBooks, String typeOfException){
+        if (listOfBooks == null || listOfBooks.size() == 0 /*|| listOfBooks.isDeleted()*/){
+            switch(typeOfException){
+                case "isbn" -> throw new NoBookByIsbnException();
+                case "title" -> throw new NoBookByTitleException();
+                case "author" -> throw new NoBookByAuthorException();
+            }
         }
-        return book;
+        return listOfBooks;
     }
 }
