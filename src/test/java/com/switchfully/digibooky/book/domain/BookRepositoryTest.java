@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.assertj.core.api.Assertions;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -13,13 +14,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 class BookRepositoryTest {
 
     private BookRepository bookRepository = new BookRepository();
+
     @BeforeEach
-    void setup(){
-        Book book1 = new Book("111", "title1", new Author("fn1","ln1"), "summary1");
-        Book book2 = new Book("222", "title2", new Author("fn2","ln2"), "summary2");
+    void setup() {
+        Book book1 = new Book("111", "title1", new Author("fn1", "ln1"), "summary1");
+        Book book2 = new Book("222", "title2", new Author("fn2", "ln2"), "summary2");
         bookRepository.save(book1);
         bookRepository.save(book2);
     }
+
     @Test
     void save_givenABookToSave_thenSavedMovieIsEqualToTheBookToSave() {
         //Given
@@ -39,8 +42,8 @@ class BookRepositoryTest {
     @Test
     void getAll_givenANonEmptyMapOfBooks_thenReturnAllTheSavedBooksInMap() {
         //Given
-        Book book1 = new Book("111", "title1", new Author("fn1","ln1"), "summary1");
-        Book book2 = new Book("222", "title2", new Author("fn2","ln2"), "summary2");
+        Book book1 = new Book("111", "title1", new Author("fn1", "ln1"), "summary1");
+        Book book2 = new Book("222", "title2", new Author("fn2", "ln2"), "summary2");
 
         //When
         Collection<Book> allSavedBooks = bookRepository.getAll();
@@ -52,14 +55,14 @@ class BookRepositoryTest {
     @Test
     void getByIsbn_givenASpecificBook_thenReturnOnlyThisSpecificBookBasedOnIsbn() {
         //Given
-        Book theBookIWant = new Book("111", "title1", new Author("fn1","ln1"), "summary1");
+        Book theBookIWant = new Book("111", "title1", new Author("fn1", "ln1"), "summary1");
         //When
-        Book theDesiredBook = bookRepository.getByIsbn(theBookIWant.getIsbn());
+        //Book theDesiredBook = bookRepository.getByIsbn(theBookIWant.getIsbn());
+        List<Book> theDesiredBook = bookRepository.getByIsbn("1");
         //Then
-        assertThat(theDesiredBook).isEqualTo(theBookIWant);
+        assertThat(theDesiredBook).containsExactly(theBookIWant);
     }
 
-    // ! Placeholder
     @Test
     void getByIsbn_givenANonExistingIsbn_thenReturnNull() {
         //Given
@@ -76,9 +79,10 @@ class BookRepositoryTest {
     @Test
     void getByTitle_givenASpecificBook_thenReturnOnlyThisSpecificBookBasedOnTitle() {
         //Given
-        Book theBookIWant = new Book("111", "title1", new Author("fn1","ln1"), "summary1");
+        Book theBookIWant = new Book("111", "title1", new Author("fn1", "ln1"), "summary1");
         //When
-        Book theDesiredBook = bookRepository.getByTitle(theBookIWant.getTitle());
+        //Book theDesiredBook = bookRepository.getByTitle(theBookIWant.getTitle());
+        List<Book> theDesiredBook = bookRepository.getByTitle("title1");
         //Then
         assertThat(theDesiredBook).containsExactly(theBookIWant);
     }
@@ -103,10 +107,10 @@ class BookRepositoryTest {
         Book theBookIWant = new Book("111", "title1", author1, "summary1");
 
         //When
-        Book theDesiredBook = bookRepository.getByTitle(theBookIWant.getTitle());
+        List<Book> theDesiredBook = bookRepository.getByTitle(theBookIWant.getTitle());
 
         //Then
-        assertThat(theDesiredBook).isEqualTo(theBookIWant);
+        assertThat(theDesiredBook).containsExactly(theBookIWant);
     }
 
     @Test
@@ -117,7 +121,7 @@ class BookRepositoryTest {
         //Then
         org.assertj.core.api.Assertions
                 .assertThatRuntimeException()
-                .isThrownBy(() -> bookRepository.getByAuthor(new Author (randomFakeIsbn, randomFakeIsbn)))
+                .isThrownBy(() -> bookRepository.getByAuthor(new Author(randomFakeIsbn, randomFakeIsbn)))
                 .withMessage("There is no book with the requested author");
 
     }
