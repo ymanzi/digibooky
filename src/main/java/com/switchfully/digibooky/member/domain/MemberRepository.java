@@ -1,5 +1,8 @@
 package com.switchfully.digibooky.member.domain;
 
+import com.switchfully.digibooky.member.domain.exceptions.EmailAlreadyExistsException;
+import com.switchfully.digibooky.member.domain.exceptions.INSSAlreadyExistsException;
+import com.switchfully.digibooky.member.domain.exceptions.INSSMissingException;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
@@ -37,7 +40,7 @@ public class MemberRepository {
                 .findFirst()
                 .orElse(null);
         if (validateNotPresent != null)
-            throw new RuntimeException("placeholder");
+            throw new EmailAlreadyExistsException("Email is already in database");
     }
 
     private void checkIfUniqueINSS (Member newMember) {
@@ -47,7 +50,7 @@ public class MemberRepository {
                 .findFirst()
                 .orElse(null);
         if (validateNotPresent != null)
-            throw new RuntimeException("placeholder");
+            throw new INSSAlreadyExistsException("INSS is already in database");
     }
     public Collection<Member> getAllMembers(){
         return memberByUUIDRepository.values();
