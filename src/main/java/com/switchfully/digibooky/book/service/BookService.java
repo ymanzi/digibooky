@@ -3,6 +3,7 @@ package com.switchfully.digibooky.book.service;
 import com.switchfully.digibooky.book.domain.Author;
 import com.switchfully.digibooky.book.domain.Book;
 import com.switchfully.digibooky.book.domain.BookRepository;
+import com.switchfully.digibooky.book.exceptions.NoBookByAuthorException;
 import com.switchfully.digibooky.book.service.dto.AuthorDto;
 import com.switchfully.digibooky.book.service.dto.BookDto;
 import com.switchfully.digibooky.book.service.mapper.AuthorMapper;
@@ -43,6 +44,10 @@ public class BookService {
     }
 
     public BookDto getByAuthor(AuthorDto authorDto){
+        if (authorDto == null){
+            throw new NoBookByAuthorException();
+        }
+
         Author author =  authorMapper.fromDto(authorDto);
         Book book = bookRepository.getByAuthor(author);
         return bookMapper.toDto(book);
