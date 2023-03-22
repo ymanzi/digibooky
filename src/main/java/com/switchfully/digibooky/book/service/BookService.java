@@ -43,6 +43,7 @@ public class BookService {
     }
 
     public BookDto getByAuthor(AuthorDto authorDto){
+        // check if firstname is mandatory
         Author author =  authorMapper.fromDto(authorDto);
         Book book = bookRepository.getByAuthor(author);
         return bookMapper.toDto(book);
