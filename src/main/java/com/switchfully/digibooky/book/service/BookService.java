@@ -34,12 +34,16 @@ public class BookService {
     }
 
     public List<BookDto> getByIsbn(String isbn){
-        List<Book> listOfBooks = bookRepository.getByIsbn(isbn);
+        String isbnRegex = changeStringWithAsteriskToRegex(isbn);
+
+        List<Book> listOfBooks = bookRepository.getByIsbn(isbnRegex);
         return bookMapper.toDto(listOfBooks);
     }
 
     public List<BookDto> getByTitle(String title){
-        List<Book> listOfBooks = bookRepository.getByTitle(title);
+        String titleRegex = changeStringWithAsteriskToRegex(title);
+
+        List<Book> listOfBooks = bookRepository.getByTitle(titleRegex);
         return bookMapper.toDto(listOfBooks);
     }
 
@@ -47,15 +51,35 @@ public class BookService {
         if (authorDto == null){
             throw new NoBookByAuthorException();
         }
-
-        Author author =  authorMapper.fromDto(authorDto);
+        AuthorDto newAuthorDto = getAuthorDtoRegex(authorDto);
+        Author author =  authorMapper.fromDto(newAuthorDto);
         List<Book> listOfBooks = bookRepository.getByAuthor(author);
         return bookMapper.toDto(listOfBooks);
+    }
+
+    private AuthorDto getAuthorDtoRegex(AuthorDto authorDto) {
+        String authorFirstname = authorDto.getFirstname();
+        String authorLastname = authorDto.getLastname();
+
+        String authorFirstnameRegex = changeStringWithAsteriskToRegex(authorFirstname);
+        String authorLastnameRegex = changeStringWithAsteriskToRegex(authorLastname);
+
+        return new AuthorDto(authorFirstnameRegex, authorLastnameRegex);
     }
 
     public BookDto save(BookDto bookDto){
         Book newBook = bookMapper.fromDto(bookDto);
         Book createdBook = bookRepository.save(newBook);
         return bookMapper.toDto(createdBook);
+    }
+
+    public String changeStringWithAsteriskToRegex(String input){
+        int indexOfAsterisk = input.indexOf("*");
+
+        if (indexOfAsterisk == 0){
+            input = input.replaceFirst("/*/g", "(^|.+)");
+        }
+
+        return input.replaceAll("/*/g", ".+");
     }
 }

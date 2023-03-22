@@ -79,7 +79,8 @@ class BookRepositoryTest {
     @Test
     void getByTitle_givenASpecificBook_thenReturnOnlyThisSpecificBookBasedOnTitle() {
         //Given
-        Book theBookIWant = new Book("111", "title1", new Author("fn1", "ln1"), "summary1");
+
+        Book theBookIWant = new Book("111", "t*le1", new Author("fn1", "ln1"), "summary1");
         //When
         //Book theDesiredBook = bookRepository.getByTitle(theBookIWant.getTitle());
         List<Book> theDesiredBook = bookRepository.getByTitle("title1");

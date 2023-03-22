@@ -39,21 +39,13 @@ public class BookRepository {
         return checkIfBookExists(listOfFoundBooks, "isbn");
     }
 
-    /*public boolean checkWildcard (String input){
-
-    }
-
-    public String changeStringWithAsteriskToRegex(String input){
-
-    }*/
-
     public List<Book> getByTitle(String title){
         Pattern pattern = Pattern.compile(title, Pattern.CASE_INSENSITIVE);
 
         List<Book> listOfFoundBooks = booksByIsbn
                 .values()
                 .stream()
-                .filter(book -> pattern.matcher(book.getTitle()).find())
+                .filter(book -> checkWildcard(book.getTitle(), title))
                 .collect(Collectors.toList());
 
         return checkIfBookExists(listOfFoundBooks, "title");
@@ -79,5 +71,10 @@ public class BookRepository {
             }
         }
         return listOfBooks;
+    }
+
+    public boolean checkWildcard(String stringToCheck, String regexString){
+        Pattern pattern = Pattern.compile(regexString, Pattern.CASE_INSENSITIVE);
+        return pattern.matcher(stringToCheck).find();
     }
 }
