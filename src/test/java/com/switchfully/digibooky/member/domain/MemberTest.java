@@ -19,6 +19,7 @@ public class MemberTest {
                 .withLastName("Pignon")
                 .withEmail("francoispignon@gmail.com")
                 .withAddress(address)
+                .withRole(Role.ADMIN)
                 .build();
     }
 
@@ -33,6 +34,7 @@ public class MemberTest {
         assertEquals("1150", member1.getAddress().streetNumber());
         assertEquals("12125", member1.getAddress().postalCode());
         assertEquals("New-York City", member1.getAddress().city());
+        assertEquals(Role.ADMIN, member1.getRole());
     }
 
     @Test
