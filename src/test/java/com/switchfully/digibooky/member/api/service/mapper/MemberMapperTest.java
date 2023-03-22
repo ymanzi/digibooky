@@ -1,7 +1,9 @@
-package com.switchfully.digibooky.member.service.mapper;
+package com.switchfully.digibooky.member.api.service.mapper;
 
 import com.switchfully.digibooky.member.domain.*;
 import com.switchfully.digibooky.member.service.*;
+import com.switchfully.digibooky.member.service.dtos.CreateMemberDto;
+import com.switchfully.digibooky.member.service.dtos.MemberDto;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,12 +50,12 @@ public class MemberMapperTest {
         assertEquals("Einstein", dto.getLastName());
         assertEquals("alberteinstein@princetown.edu", dto.getEmail());
         assertEquals(address, dto.getAddress());
-        assertEquals(Role.MEMBER, dto.getRole());
+        assertEquals(Role.ADMIN, dto.getRole());
     }
     @Test
     void test_fromDto(){
-        CreateMemberDto createMemberDto = new CreateMemberDto(member.getINSS(), member.getFirstname(), member.getLastName(), member.getEmail(), member.getAddress(), member.getRole());
-        Member member2 = new MemberMapper().fromDto(createMemberDto);
+        CreateMemberDto createMemberDto = new CreateMemberDto(member.getINSS(), member.getFirstname(), member.getLastName(), member.getEmail(), member.getAddress());
+        Member member2 = new MemberMapper().fromDto(createMemberDto, Role.MEMBER);
 
         assertNotNull(member2.getId());
         assertEquals("123-456-789", member2.getINSS());
@@ -66,8 +68,12 @@ public class MemberMapperTest {
 
     @Test
     void test_memberListToDto(){
-        List<MemberDto> dtos = new MemberMapper().memberListToDto(Lists.newArrayList(member, member2));
-        assertEquals(2, dtos.size());
+        MemberRepository memberRepository = new MemberRepository();
+        memberRepository.save(member);
+        memberRepository.save(member2);
+        List<MemberDto> dtos = new MemberMapper().memberListToDto(memberRepository.getAllMembers());
+
+        assertEquals(3, dtos.size());
         assertTrue(dtos.contains(new MemberMapper().toDto(member)));
         assertTrue(dtos.contains(new MemberMapper().toDto(member2)));
     }

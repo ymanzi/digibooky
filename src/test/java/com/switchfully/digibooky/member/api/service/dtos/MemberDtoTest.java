@@ -1,8 +1,8 @@
-package com.switchfully.digibooky.member.service.dtos;
+package com.switchfully.digibooky.member.api.service.dtos;
 
 import com.switchfully.digibooky.member.domain.Address;
 import com.switchfully.digibooky.member.domain.Role;
-import com.switchfully.digibooky.member.service.MemberDto;
+import com.switchfully.digibooky.member.service.dtos.MemberDto;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
