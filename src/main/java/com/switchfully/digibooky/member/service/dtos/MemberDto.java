@@ -3,6 +3,7 @@ package com.switchfully.digibooky.member.service.dtos;
 import com.switchfully.digibooky.member.domain.Address;
 import com.switchfully.digibooky.member.domain.Role;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class MemberDto {
@@ -44,5 +45,17 @@ public class MemberDto {
 
     public Role getRole() {
         return role;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MemberDto memberDto)) return false;
+        return Objects.equals(id, memberDto.id) && Objects.equals(firstname, memberDto.firstname) && Objects.equals(lastName, memberDto.lastName) && Objects.equals(email, memberDto.email) && Objects.equals(address, memberDto.address) && role == memberDto.role;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstname, lastName, email, address, role);
     }
 }
