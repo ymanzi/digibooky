@@ -1,7 +1,6 @@
 package com.switchfully.digibooky.book.api;
 
 import com.switchfully.digibooky.book.service.BookService;
-import com.switchfully.digibooky.book.service.dto.AuthorDto;
 import com.switchfully.digibooky.book.service.dto.BookDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
