@@ -79,9 +79,7 @@ public class BookController {
         return bookService.delete(title, id, "title");
     }
 
-    @PostMapping(path = "", consumes = "application/json",produces = "application/json")
-    @ResponseStatus(HttpStatus.CREATED)
-    public BookDto create(@RequestBody BookDto bookDto){
-        return bookService.save(bookDto);
-    }
+
+
+
 }
