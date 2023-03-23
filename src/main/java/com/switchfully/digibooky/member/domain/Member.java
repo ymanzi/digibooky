@@ -1,7 +1,11 @@
 package com.switchfully.digibooky.member.domain;
 
+import com.switchfully.digibooky.book.domain.Book;
 import com.switchfully.digibooky.member.domain.exceptions.*;
+import com.switchfully.digibooky.rental.domain.Rental;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -15,6 +19,7 @@ public class Member {
     private String email;
     private Address address;
     private Role role;
+    private final List<Rental> rentedBooks = new ArrayList<>();
 
     private Member(String INSS, String firstname, String lastName, String email, Address address, Role role) {
         id = UUID.randomUUID();
@@ -55,6 +60,16 @@ public class Member {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public List<Rental> getRentedBooks() {
+        return rentedBooks;
+    }
+    public void rentBook(Rental rental){
+        rentedBooks.add(rental);
+    }
+    public void returnBook(Rental rental){
+        rentedBooks.remove(rental);
     }
 
     @Override
