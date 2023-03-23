@@ -5,15 +5,18 @@ import java.util.Objects;
 public class Book {
     private final String isbn;
     private String title;
-
     private Author author;
     private String summary;
+    private int amountInStore;
+    private Boolean isDeleted;
 
     public Book(String isbn, String title, Author author, String summary) {
         this.isbn = isbn;
         this.title = title;
         this.author = author;
         this.summary = summary;
+        amountInStore = 1;
+        isDeleted = false;
     }
 
     public String getIsbn() {
@@ -32,6 +35,19 @@ public class Book {
         return summary;
     }
 
+    public int getAmountInStore() {
+        return amountInStore;
+    }
+
+    public Boolean isDeleted() {
+        return isDeleted;
+    }
+    public void decreaseAmountInStore(int amount){
+        amountInStore-= amount;
+    }
+    public void  increaseAmountInStore(int amount){
+        amountInStore += amount;
+    }
     public void setSummary(String summary) {
         this.summary = summary;
     }

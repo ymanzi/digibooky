@@ -1,34 +1,36 @@
-package com.switchfully.digibooky.rental.domain;
+package com.switchfully.digibooky.rental.service.dto;
 
 import com.switchfully.digibooky.book.domain.Book;
+import com.switchfully.digibooky.book.service.dto.BookDto;
 import com.switchfully.digibooky.member.domain.Member;
+import com.switchfully.digibooky.member.service.dtos.MemberDto;
 
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
-public class Rental {
+public class RentalDto {
     private final UUID rentalId;
-    private final Book bookRented;
-    private final Member renter;
+    private final BookDto bookRented;
+    private final MemberDto renter;
     private final LocalDate returnDate;
 
-    public Rental(Book bookRented, Member renter) {
-        this.rentalId = UUID.randomUUID();
+    public RentalDto(UUID rentalId, BookDto bookRented, MemberDto renter, LocalDate returnDate) {
+        this.rentalId = rentalId;
         this.bookRented = bookRented;
         this.renter = renter;
-        this.returnDate = LocalDate.now().plusWeeks(3);
+        this.returnDate = returnDate;
     }
 
     public UUID getRentalId() {
         return rentalId;
     }
 
-    public Book getBookRented() {
+    public BookDto getBookRented() {
         return bookRented;
     }
 
-    public Member getRenter() {
+    public MemberDto getRenter() {
         return renter;
     }
 
@@ -40,8 +42,8 @@ public class Rental {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Rental rental = (Rental) o;
-        return Objects.equals(rentalId, rental.rentalId) && Objects.equals(bookRented, rental.bookRented) && Objects.equals(renter, rental.renter) && Objects.equals(returnDate, rental.returnDate);
+        RentalDto rentalDto = (RentalDto) o;
+        return Objects.equals(rentalId, rentalDto.rentalId) && Objects.equals(bookRented, rentalDto.bookRented) && Objects.equals(renter, rentalDto.renter) && Objects.equals(returnDate, rentalDto.returnDate);
     }
 
     @Override

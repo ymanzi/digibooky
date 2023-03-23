@@ -1,7 +1,10 @@
 package com.switchfully.digibooky.member.domain;
 
 import com.switchfully.digibooky.member.domain.exceptions.*;
+import com.switchfully.digibooky.rental.domain.Rental;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -9,16 +12,17 @@ import java.util.regex.Pattern;
 
 public class Member {
     private final UUID id;
-    private final String INSS;
+    private final String inss;
     private String firstname;
     private String lastName;
     private String email;
     private Address address;
     private Role role;
+    private final List<Rental> rentedBooks = new ArrayList<>();
 
-    private Member(String INSS, String firstname, String lastName, String email, Address address, Role role) {
+    private Member(String inss, String firstname, String lastName, String email, Address address, Role role) {
         id = UUID.randomUUID();
-        this.INSS = INSS;
+        this.inss = inss;
         this.firstname = firstname;
         this.lastName = lastName;
         this.email = email;
@@ -29,8 +33,8 @@ public class Member {
     public UUID getId() {
         return id;
     }
-    public String getINSS(){
-        return INSS;
+    public String getInss(){
+        return inss;
     }
 
     public String getFirstname() {
@@ -57,17 +61,27 @@ public class Member {
         this.role = role;
     }
 
+    public List<Rental> getRentedBooks() {
+        return rentedBooks;
+    }
+    public void rentBook(Rental rental){
+        rentedBooks.add(rental);
+    }
+    public void returnBook(Rental rental){
+        rentedBooks.remove(rental);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Member member = (Member) o;
-        return Objects.equals(id, member.id) && INSS.equals(member.INSS) && Objects.equals(firstname, member.firstname) && lastName.equals(member.lastName) && email.equals(member.email) && address.equals(member.address);
+        return Objects.equals(id, member.id) && inss.equals(member.inss) && Objects.equals(firstname, member.firstname) && lastName.equals(member.lastName) && email.equals(member.email) && address.equals(member.address);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(INSS, firstname, lastName, email, address);
+        return Objects.hash(inss, firstname, lastName, email, address);
     }
     public static class MemberBuilder {
         private String INSS;

@@ -7,14 +7,13 @@ import com.switchfully.digibooky.member.service.dtos.MemberDto;
 
 import java.util.Collection;
 import java.util.List;
-
 public class MemberMapper {
     public MemberDto toDto(Member member){
         return new MemberDto(member.getId(), member.getFirstname(), member.getLastName(), member.getEmail(), member.getAddress(), member.getRole());
     }
     public Member fromDto(CreateMemberDto memberDto, Role role){
         Member member = new Member.MemberBuilder()
-                .withINSS(memberDto.getINSS())
+                .withINSS(memberDto.getInss())
                 .withAddress(memberDto.getAddress())
                 .withEmail(memberDto.getEmail())
                 .withFirstname(memberDto.getFirstname())

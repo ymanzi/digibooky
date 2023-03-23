@@ -27,7 +27,7 @@ public class MemberTest {
     @Test
     void testCreateMemberWithAllFieldsFilledIn(){
         assertNotNull(member1);
-        assertEquals("123-456-789", member1.getINSS());
+        assertEquals("123-456-789", member1.getInss());
         assertEquals("François", member1.getFirstname());
         assertEquals("Pignon", member1.getLastName());
         assertEquals("francoispignon@gmail.com", member1.getEmail());
@@ -48,7 +48,7 @@ public class MemberTest {
                 .build();
 
         assertNotNull(memberAda);
-        assertNotNull(memberAda.getINSS());
+        assertNotNull(memberAda.getInss());
         assertNotNull(memberAda.getLastName());
         assertNotNull(memberAda.getEmail());
         assertNotNull(memberAda.getAddress());
