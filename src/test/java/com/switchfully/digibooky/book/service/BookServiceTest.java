@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class BookServiceTest {
 
     @Autowired
