@@ -23,4 +23,11 @@ public class BookMapper {
     public Book fromDto(BookDto bookDto){
         return new Book(bookDto.getIsbn(), bookDto.getTitle(), bookDto.getAuthor(), bookDto.getSummary());
     }
+
+    public List<Book> fromDto(List<BookDto> listOfBooksDto){
+        return listOfBooksDto
+                .stream()
+                .map(this::fromDto)
+                .toList();
+    }
 }
