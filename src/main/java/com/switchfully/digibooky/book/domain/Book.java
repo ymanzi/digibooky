@@ -1,5 +1,9 @@
 package com.switchfully.digibooky.book.domain;
 
+import com.switchfully.digibooky.book.exceptions.NoIsbnForBookException;
+import com.switchfully.digibooky.book.exceptions.NoLastnameForAuthorException;
+import com.switchfully.digibooky.book.exceptions.NoTitleForBookException;
+
 import java.util.Objects;
 
 public class Book {
@@ -8,8 +12,16 @@ public class Book {
 
     private Author author;
     private String summary;
+    private Boolean deleted = false;
 
     public Book(String isbn, String title, Author author, String summary) {
+        if (isbn == null || isbn.isEmpty() || isbn.isBlank())
+            throw new NoIsbnForBookException();
+        if (title == null || title.isEmpty() || title.isBlank())
+            throw new NoTitleForBookException();
+        if (author == null || author.getLastname() == null || author.getLastname().isEmpty() || author.getLastname().isBlank())
+            throw new NoLastnameForAuthorException();
+
         this.isbn = isbn;
         this.title = title;
         this.author = author;
@@ -32,6 +44,10 @@ public class Book {
         return summary;
     }
 
+    public Boolean isDeleted() {
+        return deleted;
+    }
+
     public void setSummary(String summary) {
         this.summary = summary;
     }
@@ -42,6 +58,10 @@ public class Book {
 
     public void setAuthor(Author author) {
         this.author = author;
+    }
+
+    public void toggleDeleted(){
+        this.deleted = !deleted;
     }
 
     @Override
