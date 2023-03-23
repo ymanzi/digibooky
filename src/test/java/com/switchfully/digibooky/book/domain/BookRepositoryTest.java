@@ -7,11 +7,13 @@ import org.assertj.core.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class BookRepositoryTest {
@@ -75,18 +77,14 @@ class BookRepositoryTest {
         String randomFakeIsbn = UUID.randomUUID().toString();
 
         //Then
-        org.assertj.core.api.Assertions
-                .assertThatRuntimeException()
-                .isThrownBy(() -> bookRepository.getByIsbn(randomFakeIsbn))
-                .withMessage("There is no book with the requested Isbn");
-
+        assertTrue(bookRepository.getByIsbn(randomFakeIsbn).isEmpty());
     }
 
     @Test
     void getByTitle_givenASpecificBook_thenReturnOnlyThisSpecificBookBasedOnTitle() {
         //Given
 
-        Book theBookIWant = new Book("111", "t*le1", new Author("fn1", "ln1"), "summary1");
+        Book theBookIWant = new Book("111", "title1", new Author("fn1", "ln1"), "summary1");
         //When
         //Book theDesiredBook = bookRepository.getByTitle(theBookIWant.getTitle());
         List<Book> theDesiredBook = bookRepository.getByTitle("title1");
@@ -96,16 +94,12 @@ class BookRepositoryTest {
     }
 
     @Test
-    void getByIsbn_givenANonExistingTitle_thenReturnNull() {
+    void getByIsbn_givenANonExistingTitle_thenReturEmptyList() {
         //Given
         String randomFakeIsbn = UUID.randomUUID().toString();
 
         //Then
-        org.assertj.core.api.Assertions
-                .assertThatRuntimeException()
-                .isThrownBy(() -> bookRepository.getByTitle(randomFakeIsbn))
-                .withMessage("There is no book with the requested title");
-
+        assertTrue(bookRepository.getByIsbn(randomFakeIsbn).isEmpty());
     }
 
     @Test
@@ -122,16 +116,10 @@ class BookRepositoryTest {
     }
 
     @Test
-    void getByIsbn_givenANonExistingAuthor_thenReturnNull() {
-        //Given
-        String randomFakeIsbn = UUID.randomUUID().toString();
+    void getByIsbn_givenANonExistingAuthor_thenReturnEmptyList() {
 
         //Then
-        org.assertj.core.api.Assertions
-                .assertThatRuntimeException()
-                .isThrownBy(() -> bookRepository.getByAuthor(new Author(randomFakeIsbn, randomFakeIsbn)))
-                .withMessage("There is no book with the requested author");
-
+        assertTrue(bookRepository.getByAuthor("45").isEmpty());
     }
 
 
