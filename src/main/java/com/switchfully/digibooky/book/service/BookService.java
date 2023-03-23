@@ -23,10 +23,11 @@ public class BookService {
     private final AuthorMapper authorMapper;
     private final MemberRepository memberRepository;
 
-    public BookService(BookRepository bookRepository, BookMapper bookMapper, AuthorMapper authorMapper) {
+    public BookService(BookRepository bookRepository, BookMapper bookMapper, AuthorMapper authorMapper, MemberRepository memberRepository) {
         this.bookRepository = bookRepository;
         this.bookMapper = bookMapper;
         this.authorMapper = authorMapper;
+        this.memberRepository = memberRepository;
     }
 
     public List<BookDto> getAll(){
@@ -51,24 +52,13 @@ public class BookService {
         return bookMapper.toDto(listOfBooks);
     }
 
-    public List<BookDto> getByAuthor(AuthorDto authorDto){
-        if (authorDto == null){
+    public List<BookDto> getByAuthor(String authorId){
+        if (authorId == null){
             throw new NoBookByAuthorException();
         }
-        AuthorDto newAuthorDto = getAuthorDtoRegex(authorDto);
-        Author author =  authorMapper.fromDto(newAuthorDto);
-        List<Book> listOfBooks = bookRepository.getByAuthor(author);
+
+        List<Book> listOfBooks = bookRepository.getByAuthor(authorId);
         return bookMapper.toDto(listOfBooks);
-    }
-
-    private AuthorDto getAuthorDtoRegex(AuthorDto authorDto) {
-        String authorFirstname = authorDto.getFirstname();
-        String authorLastname = authorDto.getLastname();
-
-        String authorFirstnameRegex = changeStringWithAsteriskToRegex(authorFirstname);
-        String authorLastnameRegex = changeStringWithAsteriskToRegex(authorLastname);
-
-        return new AuthorDto(authorFirstnameRegex, authorLastnameRegex);
     }
 
     public BookDto save(BookDto bookDto, String id){
@@ -101,7 +91,6 @@ public class BookService {
         if (indexOfAsterisk == 0){
             input = input.replaceFirst("[*]", "(^|.+)");
         }
-
 
         return input.replaceAll("[*]", ".+");
     }
