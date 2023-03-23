@@ -32,7 +32,6 @@ public class BookDto {
         return summary;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -44,5 +43,15 @@ public class BookDto {
     @Override
     public int hashCode() {
         return Objects.hash(isbn, title, author, summary);
+    }
+
+    @Override
+    public String toString() {
+        return "BookDto{" +
+                "isbn='" + isbn + '\'' +
+                ", title='" + title + '\'' +
+                ", author=" + author +
+                ", summary='" + summary + '\'' +
+                '}';
     }
 }
