@@ -12,10 +12,7 @@ import com.switchfully.digibooky.rental.service.exceptions.NoRightException;
 import com.switchfully.digibooky.rental.service.exceptions.NoSuchBookInStoreException;
 import com.switchfully.digibooky.rental.service.exceptions.NoSuchMemberException;
 import com.switchfully.digibooky.rental.service.exceptions.NoSuchRentalException;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -64,5 +61,18 @@ public class RentalService {
             return "Returned book is overdue";
         }
         return "Returned Book without issue";
+    }
+    public List<RentalDto> getAllRentalsForSpecificMember(String memberId, String userId) {
+        if (memberRepository.getMemberById(UUID.fromString(userId)).getRole() == Role.MEMBER)
+            throw new NoRightException("User with id: " + userId + " has no right to request rentals");
+        List<Rental> rentals = memberRepository.getMemberById(UUID.fromString(memberId)).getRentedBooks();
+        return rentalMapper.toDtoList(rentals);
+    }
+
+    public List<RentalDto> getAllOverdueRentals(String userId) {
+        if (memberRepository.getMemberById(UUID.fromString(userId)).getRole() == Role.MEMBER)
+            throw new NoRightException("User with id: " + userId + " has no right to request rentals");
+        List<Rental> overdueRentals = rentalRepository.getAllRentals().stream().filter(rental -> rental.getReturnDate().isBefore(LocalDate.now())).toList();
+        return rentalMapper.toDtoList(overdueRentals);
     }
 }

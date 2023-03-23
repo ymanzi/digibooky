@@ -34,4 +34,15 @@ public class RentalController {
     public String returnBook(@RequestBody String rentalID){
         return rentalService.returnBook(rentalID);
     }
+
+    @GetMapping(path = "/{memberId}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<RentalDto> getAllRentalsForSpecificMember(@PathVariable String memberId, @RequestHeader String userId){
+        return rentalService.getAllRentalsForSpecificMember(memberId, userId);
+    }
+    @GetMapping(path = "/overdue")
+    @ResponseStatus(HttpStatus.OK)
+    public List<RentalDto> getAllOverdueRentals(@RequestHeader String userId){
+        return rentalService.getAllOverdueRentals(userId);
+    }
 }
