@@ -1,16 +1,19 @@
 package com.switchfully.digibooky.book.service;
 
-import com.switchfully.digibooky.book.domain.Author;
 import com.switchfully.digibooky.book.domain.Book;
 import com.switchfully.digibooky.book.domain.BookRepository;
+import com.switchfully.digibooky.book.exceptions.NoAuthorByIdException;
 import com.switchfully.digibooky.book.exceptions.NoBookByAuthorException;
-import com.switchfully.digibooky.book.service.dto.AuthorDto;
+import com.switchfully.digibooky.book.exceptions.UnauthorizedEndPointException;
 import com.switchfully.digibooky.book.service.dto.BookDto;
 import com.switchfully.digibooky.book.service.mapper.AuthorMapper;
 import com.switchfully.digibooky.book.service.mapper.BookMapper;
+import com.switchfully.digibooky.member.domain.MemberRepository;
+import com.switchfully.digibooky.member.domain.Role;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class BookService {
@@ -18,6 +21,7 @@ public class BookService {
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
     private final AuthorMapper authorMapper;
+    private final MemberRepository memberRepository;
 
     public BookService(BookRepository bookRepository, BookMapper bookMapper, AuthorMapper authorMapper) {
         this.bookRepository = bookRepository;
@@ -100,5 +104,26 @@ public class BookService {
 
 
         return input.replaceAll("[*]", ".+");
+    }
+
+    public Role getRoleOfMemberById(String id){
+        if (memberRepository.getMemberById(UUID.fromString(id)) == null){
+            throw new NoAuthorByIdException();
+        }
+        return memberRepository.getMemberById(UUID.fromString(id)).getRole();
+    }
+
+    public List<BookDto> delete(String input, String id, String typeOfDelete) {
+        if (getRoleOfMemberById(id) == Role.MEMBER){
+            throw new UnauthorizedEndPointException();
+        }
+
+        List<BookDto> listOfBookToDelete = switch(typeOfDelete){
+            case "isbn" -> getByIsbn(input);
+            default -> getByTitle(input); // case "title"
+        };
+
+        List<Book> listOfDeletedBooks = bookRepository.delete(bookMapper.fromDto(listOfBookToDelete));
+        return bookMapper.toDto(listOfDeletedBooks);
     }
 }
