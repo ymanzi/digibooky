@@ -36,6 +36,7 @@ public class MemberRepositoryTest {
     @Test
     void checkIfUniqueEmail_WhenASecondMemberWithSameEmailIsCreated_ThenThrowsException(){
         Member member2 = new Member.MemberBuilder()
+                .withINSS("528-437-615")
                 .withLastName("Turner")
                 .withEmail("bill@microsoft.com")
                 .withAddress(new Address("", "", "", "Mexico"))
@@ -48,6 +49,7 @@ public class MemberRepositoryTest {
     void checkIfUniqueINSS_WhenASecondMemberWithSameINSSIsCreated_ThenThrowsException() {
         Member member2 = new Member.MemberBuilder()
                 .withINSS("123-456-789")
+                .withEmail("bill@apple.com")
                 .withLastName("Turner")
                 .withAddress(new Address("", "", "", "Mexico"))
                 .build();
@@ -58,12 +60,13 @@ public class MemberRepositoryTest {
     void testGetAllMembers(){
         Member member2 = new Member.MemberBuilder()
                 .withINSS("951-753-852-564")
+                .withEmail("abc@abc.abc")
                 .withLastName("Smith")
                 .withAddress(new Address("", "", "", "Mexico"))
                 .build();
         memberRepository.save(member2);
         Collection<Member> allMembers = memberRepository.getAllMembers();
-        assertEquals(2, allMembers.size());
+        assertEquals(3, allMembers.size());
         assertTrue(allMembers.contains(member));
         assertTrue(allMembers.contains(member2));
     }
