@@ -4,6 +4,8 @@ import com.switchfully.digibooky.book.exceptions.NoBookByAuthorException;
 import com.switchfully.digibooky.book.exceptions.NoBookByIsbnException;
 import com.switchfully.digibooky.book.exceptions.NoBookByTitleException;
 import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,7 +22,11 @@ public class BookRepository {
     }
 
     public Collection<Book> getAll(){
-        return booksByIsbn.values();
+        return booksByIsbn
+                .values()
+                .stream()
+                .filter(book -> !book.isDeleted())
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public Book save(Book book){
@@ -32,6 +38,7 @@ public class BookRepository {
         List<Book> listOfFoundBooks = booksByIsbn
                 .values()
                 .stream()
+                .filter(book -> !book.isDeleted())
                 .filter(book -> checkWildcard(book.getIsbn(), isbn))
                 .collect(Collectors.toList());
 
@@ -42,20 +49,19 @@ public class BookRepository {
         List<Book> listOfFoundBooks = booksByIsbn
                 .values()
                 .stream()
+                .filter(book -> !book.isDeleted())
                 .filter(book -> checkWildcard(book.getTitle(), title))
                 .collect(Collectors.toList());
 
         return checkIfBookExists(listOfFoundBooks, "title");
     }
 
-    public List<Book> getByAuthor(Author author){
-        String authorFirstname = author.getFirstname();
-        String authorLastname = author.getLastname();
-        
+    public List<Book> getByAuthor(String authorId){
         List<Book> listOfFoundBooks = booksByIsbn
                 .values()
                 .stream()
-                .filter(book -> checkWildcard(book.getAuthor().getFirstname(), authorFirstname) || checkWildcard(book.getAuthor().getLastname(), authorLastname)  )
+                .filter(book -> !book.isDeleted())
+                .filter(book -> String.valueOf(book.getAuthor().getUserId()).equals(authorId) )
                 .collect(Collectors.toList());
 
         return checkIfBookExists(listOfFoundBooks, "author");
@@ -63,7 +69,7 @@ public class BookRepository {
 
 
     public List<Book> checkIfBookExists(List<Book> listOfBooks, String typeOfException){
-        if (listOfBooks == null || listOfBooks.size() == 0 /*|| listOfBooks.isDeleted()*/){
+        if (listOfBooks == null /*|| listOfBooks.isDeleted()*/){
             switch(typeOfException){
                 case "isbn" -> throw new NoBookByIsbnException();
                 case "title" -> throw new NoBookByTitleException();
