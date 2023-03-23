@@ -76,6 +76,10 @@ public class BookService {
     public String changeStringWithAsteriskToRegex(String input){
         int indexOfAsterisk = input.indexOf("*");
 
+        if (indexOfAsterisk == -1) {
+            return input;
+        }
+
         if (indexOfAsterisk == 0){
             input = input.replaceFirst("[*]", "(^|.+)");
         }

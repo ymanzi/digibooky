@@ -1,8 +1,11 @@
 package com.switchfully.digibooky.book.domain;
 
+import com.switchfully.digibooky.book.service.BookService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.assertj.core.api.Assertions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Collection;
 import java.util.List;
@@ -10,10 +13,13 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class BookRepositoryTest {
 
     private BookRepository bookRepository = new BookRepository();
+
+    @Autowired
+    private BookService bookService;
 
     @BeforeEach
     void setup() {

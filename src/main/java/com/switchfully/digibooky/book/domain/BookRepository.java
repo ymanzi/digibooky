@@ -49,10 +49,13 @@ public class BookRepository {
     }
 
     public List<Book> getByAuthor(Author author){
+        String authorFirstname = author.getFirstname();
+        String authorLastname = author.getLastname();
+        
         List<Book> listOfFoundBooks = booksByIsbn
                 .values()
                 .stream()
-                .filter(book -> book.getAuthor().equals(author))
+                .filter(book -> checkWildcard(book.getAuthor().getFirstname(), authorFirstname) || checkWildcard(book.getAuthor().getLastname(), authorLastname)  )
                 .collect(Collectors.toList());
 
         return checkIfBookExists(listOfFoundBooks, "author");

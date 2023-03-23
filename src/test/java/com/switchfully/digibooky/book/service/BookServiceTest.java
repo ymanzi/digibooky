@@ -55,7 +55,7 @@ class BookServiceTest {
         List<BookDto> listOfBooksRetrieved = bookService.getByIsbn(book1.getIsbn());
 
         //then
-        assertThat(listOfBooksRetrieved).containsExactly(book1);
+        assertThat(listOfBooksRetrieved).containsExactlyInAnyOrder(book1);
     }
 
     @Test
@@ -114,5 +114,14 @@ class BookServiceTest {
 
         //then
         assertThat(bookToSave).isEqualTo(bookSaved);
+    }
+
+    @Test
+    void changeStringWithAsteriskToRegex_givenStringStartingWithAsterisk_thenReturnTheRegexString(){
+        //Given
+        String regexString = "(^|.+)le1";
+
+        //then
+        assertThat(bookService.changeStringWithAsteriskToRegex("*le1")).isEqualTo(regexString);
     }
 }
