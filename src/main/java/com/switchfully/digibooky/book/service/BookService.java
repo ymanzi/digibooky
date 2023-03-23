@@ -67,10 +67,24 @@ public class BookService {
         return new AuthorDto(authorFirstnameRegex, authorLastnameRegex);
     }
 
-    public BookDto save(BookDto bookDto){
+    public BookDto save(BookDto bookDto, String id){
+        if (getRoleOfMemberById(id) == Role.MEMBER){
+            throw new UnauthorizedEndPointException();
+        }
         Book newBook = bookMapper.fromDto(bookDto);
         Book createdBook = bookRepository.save(newBook);
         return bookMapper.toDto(createdBook);
+    }
+
+    public BookDto update(BookDto bookToUpdateDto, String id){
+        if (getRoleOfMemberById(id) == Role.MEMBER){
+            throw new UnauthorizedEndPointException();
+        }
+
+        Book bookToUpdate = bookMapper.fromDto(bookToUpdateDto);
+        Book bookUpdated = bookRepository.update(bookToUpdate);
+
+        return bookMapper.toDto(bookUpdated);
     }
 
     public String changeStringWithAsteriskToRegex(String input){
