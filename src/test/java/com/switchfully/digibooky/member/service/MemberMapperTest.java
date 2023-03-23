@@ -1,4 +1,4 @@
-package com.switchfully.digibooky.member.api.service.mapper;
+package com.switchfully.digibooky.member.service;
 
 import com.switchfully.digibooky.member.domain.*;
 import com.switchfully.digibooky.member.service.*;

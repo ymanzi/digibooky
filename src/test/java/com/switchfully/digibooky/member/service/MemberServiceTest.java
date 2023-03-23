@@ -4,6 +4,8 @@ import com.switchfully.digibooky.member.domain.Address;
 import com.switchfully.digibooky.member.domain.Member;
 import com.switchfully.digibooky.member.domain.MemberRepository;
 import com.switchfully.digibooky.member.domain.Role;
+import com.switchfully.digibooky.member.service.MemberMapper;
+import com.switchfully.digibooky.member.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 
 public class MemberServiceTest {
