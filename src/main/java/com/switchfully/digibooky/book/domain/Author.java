@@ -3,6 +3,8 @@ package com.switchfully.digibooky.book.domain;
 import java.util.Objects;
 
 public class Author {
+    private final int userId;
+    private static int userNumber = 1;
     private final String firstname;
     private final String lastname;
 
@@ -21,6 +23,8 @@ public class Author {
     public String getLastname() {
         return lastname;
     }
+
+    public int getUserId() { return userId;}
 
     @Override
     public boolean equals(Object o) {
