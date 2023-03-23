@@ -186,4 +186,75 @@ class BookRepositoryTest {
         assertThat(bookRepository.checkWildcard(title, regexTitle)).isFalse();
     }
 
+    @Test
+    void givenAProvidedBookDto_thenUpdateMethodEditThisObjectInMap(){
+        // Given
+        Book bookToUpdate = new Book("isbnToUpdate", "titleToUpdate", new Author("fntu", "lntu"), "summaryToUpdate");
+        bookRepository.save(bookToUpdate);
+
+        // When
+        Book bookAfterUpdate = bookRepository.update(new Book("isbnToUpdate",
+                "titleUpdated",
+                new Author("fnUpdated", "lnUpdated"),
+                "summaryUpdated"));
+
+        // Then
+        assertThat(bookToUpdate).isEqualTo(bookAfterUpdate);
+    }
+
+    @Test
+    void delete_givenABook_thenChangeDeletedAttributeOfTheBookToTrue()
+    {
+        //Given
+        Book bookToDelete = new Book("isbnToDelete", "titleToDelete", new Author("firstToDelete", "lastToDelete"), "summary");
+        bookRepository.save(bookToDelete);
+        //Then
+        Book deletedBook = bookRepository.delete(bookToDelete);
+        assertThat(deletedBook.isDeleted()).isTrue();
+    }
+
+    @Test
+    void delete_givenADeletedBook_thenReturnEmptyListIfSearchForTheBookAfterwards()
+    {
+        //Given
+        Book bookToDelete = new Book("isbnToDelete", "titleToDelete", new Author("firstToDelete", "lastToDelete"), "summary");
+        bookRepository.save(bookToDelete);
+        bookRepository.delete(bookToDelete);
+
+        //Then
+        assertTrue(bookRepository.getByIsbn(bookToDelete.getIsbn()).isEmpty());
+    }
+
+    @Test
+    void delete_givenAListOfBook_thenChangeDeletedAttributeOfThoseBooksToTrue()
+    {
+        //Given
+        Book bookToDelete = new Book("isbnToDelete", "titleToDelete", new Author("firstToDelete", "lastToDelete"), "summary");
+        bookRepository.save(bookToDelete);
+
+        //When
+        Book deletedBook = bookRepository.delete(bookToDelete);
+
+        //Then
+        assertThat(deletedBook.isDeleted()).isTrue();
+        assertThat(deletedBook).isEqualTo(bookToDelete);
+    }
+
+    @Test
+    void delete_givenAListOfBookToDelete_thenTrowAnEmptyListAfterwards()
+    {
+        //Given
+        Book bookToDelete = new Book("isbnToDelete", "titleToDelete", new Author("firstToDelete", "lastToDelete"), "summary");
+        Book bookToDelete1 = new Book("isbnToDelete1", "titleToDelete1", new Author("firstToDelete1", "lastToDelete1"), "summary");
+        bookRepository.save(bookToDelete);
+        bookRepository.save(bookToDelete1);
+
+        //When
+        List<Book> booksToDelete = new ArrayList<>(List.of(bookToDelete, bookToDelete1));
+
+        //Then
+        List<Book> deletedBooks = bookRepository.delete(booksToDelete);
+        assertTrue(bookRepository.getByIsbn(bookToDelete.getIsbn()).isEmpty());
+        assertThat(deletedBooks).containsExactlyInAnyOrder(bookToDelete1, bookToDelete);
+    }
 }
