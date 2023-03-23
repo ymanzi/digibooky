@@ -146,4 +146,44 @@ class BookRepositoryTest {
                 .withMessage("There is no book with the requested Isbn");
     }
 
+    @Test
+    void checkWildCard_givenATitleStringMatchingARegexString_thenReturnTrue(){
+        //Given
+        String title = "title1";
+        String regexTitle = bookService.changeStringWithAsteriskToRegex("t*le1");
+
+        //Then
+        assertThat(bookRepository.checkWildcard(title, regexTitle)).isTrue();
+    }
+
+    @Test
+    void checkWildCard_givenATitleStringMatchingAStartingRegexString_thenReturnTrue(){
+        //Given
+        String title = "title1";
+        String regexTitle = bookService.changeStringWithAsteriskToRegex("*le1");
+
+        //Then
+        assertThat(bookRepository.checkWildcard(title, regexTitle)).isTrue();
+    }
+
+    @Test
+    void checkWildCard_givenATitleStringMatchingAEndingRegexString_thenReturnTrue(){
+        //Given
+        String title = "title1";
+        String regexTitle = bookService.changeStringWithAsteriskToRegex("tit*");
+
+        //Then
+        assertThat(bookRepository.checkWildcard(title, regexTitle)).isTrue();
+    }
+
+    @Test
+    void checkWildCard_givenATitleStringIsNotMatchingARegexString_thenReturnFalse(){
+        //Given
+        String title = "title1";
+        String regexTitle = bookService.changeStringWithAsteriskToRegex("t*a1");
+
+        //then
+        assertThat(bookRepository.checkWildcard(title, regexTitle)).isFalse();
+    }
+
 }
