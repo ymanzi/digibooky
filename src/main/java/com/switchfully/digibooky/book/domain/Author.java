@@ -1,5 +1,7 @@
 package com.switchfully.digibooky.book.domain;
 
+import com.switchfully.digibooky.book.exceptions.NoLastnameForAuthorException;
+
 import java.util.Objects;
 
 public class Author {
