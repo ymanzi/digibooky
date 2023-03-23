@@ -12,7 +12,10 @@ import com.switchfully.digibooky.rental.service.exceptions.NoRightException;
 import com.switchfully.digibooky.rental.service.exceptions.NoSuchBookInStoreException;
 import com.switchfully.digibooky.rental.service.exceptions.NoSuchMemberException;
 import com.switchfully.digibooky.rental.service.exceptions.NoSuchRentalException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -62,5 +65,4 @@ public class RentalService {
         }
         return "Returned Book without issue";
     }
-
 }

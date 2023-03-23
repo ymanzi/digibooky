@@ -4,7 +4,6 @@ import com.switchfully.digibooky.member.domain.Member;
 import com.switchfully.digibooky.member.domain.Role;
 import com.switchfully.digibooky.member.service.dtos.CreateMemberDto;
 import com.switchfully.digibooky.member.service.dtos.MemberDto;
-import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.List;
@@ -14,7 +13,7 @@ public class MemberMapper {
     }
     public Member fromDto(CreateMemberDto memberDto, Role role){
         Member member = new Member.MemberBuilder()
-                .withINSS(memberDto.getINSS())
+                .withINSS(memberDto.getInss())
                 .withAddress(memberDto.getAddress())
                 .withEmail(memberDto.getEmail())
                 .withFirstname(memberDto.getFirstname())
