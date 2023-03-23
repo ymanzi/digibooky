@@ -9,7 +9,6 @@ import java.util.Objects;
 public class Book {
     private final String isbn;
     private String title;
-
     private Author author;
     private String summary;
     private Boolean deleted = false;
@@ -69,21 +68,11 @@ public class Book {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return Objects.equals(isbn, book.isbn);
+        return Objects.equals(isbn, book.isbn) && Objects.equals(title, book.title) && Objects.equals(author, book.author) && Objects.equals(summary, book.summary) && Objects.equals(deleted, book.deleted);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(isbn);
-    }
-
-    @Override
-    public String toString() {
-        return "Book{" +
-                "isbn='" + isbn + '\'' +
-                ", title='" + title + '\'' +
-                ", author=" + author +
-                ", summary='" + summary + '\'' +
-                '}';
+        return Objects.hash(isbn, title, author, summary, deleted);
     }
 }
