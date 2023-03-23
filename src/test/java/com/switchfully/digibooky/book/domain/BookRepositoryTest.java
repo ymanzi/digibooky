@@ -84,6 +84,7 @@ class BookRepositoryTest {
         //When
         //Book theDesiredBook = bookRepository.getByTitle(theBookIWant.getTitle());
         List<Book> theDesiredBook = bookRepository.getByTitle("title1");
+
         //Then
         assertThat(theDesiredBook).containsExactly(theBookIWant);
     }
@@ -130,8 +131,10 @@ class BookRepositoryTest {
 
     @Test
     void checkIfBookExists_givenNoBookProvided_thenThrowException() {
+        //Given
         BookRepository bookRepository = new BookRepository();
 
+        //Then
         Assertions.assertThatRuntimeException()
                 .isThrownBy(() -> bookRepository.checkIfBookExists(null, "isbn"))
                 .withMessage("There is no book with the requested Isbn");

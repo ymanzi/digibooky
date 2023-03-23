@@ -29,18 +29,16 @@ public class BookRepository {
     }
 
     public List<Book> getByIsbn(String isbn){
-        Pattern pattern = Pattern.compile(isbn, Pattern.CASE_INSENSITIVE);
         List<Book> listOfFoundBooks = booksByIsbn
                 .values()
                 .stream()
-                .filter(book -> pattern.matcher(book.getIsbn()).find())
+                .filter(book -> checkWildcard(book.getIsbn(), isbn))
                 .collect(Collectors.toList());
 
         return checkIfBookExists(listOfFoundBooks, "isbn");
     }
 
     public List<Book> getByTitle(String title){
-
         List<Book> listOfFoundBooks = booksByIsbn
                 .values()
                 .stream()

@@ -77,9 +77,10 @@ public class BookService {
         int indexOfAsterisk = input.indexOf("*");
 
         if (indexOfAsterisk == 0){
-            input = input.replaceFirst("/*/g", "(^|.+)");
+            input = input.replaceFirst("[*]", "(^|.+)");
         }
 
-        return input.replaceAll("/*/g", ".+");
+
+        return input.replaceAll("[*]", ".+");
     }
 }
