@@ -6,13 +6,11 @@ import com.switchfully.digibooky.member.domain.MemberRepository;
 import com.switchfully.digibooky.member.domain.Role;
 import com.switchfully.digibooky.member.service.dtos.CreateMemberDto;
 import com.switchfully.digibooky.member.service.dtos.MemberDto;
-import com.switchfully.digibooky.member.service.exceptions.NonAdminIdProvidedException;
+import com.switchfully.digibooky.rental.service.exceptions.NoRightException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
-
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MemberServiceTest {
 
@@ -64,7 +62,7 @@ public class MemberServiceTest {
     @Test
     void getAllMembers_givenANonAdminID_shouldThrowException(){
         String nonAdminId = member1.getId().toString();
-        assertThrows(NonAdminIdProvidedException.class, () -> memberService.getAllMembers(nonAdminId));
+        assertThrows(NoRightException.class, () -> memberService.getAllMembers(nonAdminId));
     }
 
     @Test
@@ -90,6 +88,6 @@ public class MemberServiceTest {
     @Test
     void registerLibrarian_givenNonValidAdminIDAndValidCreateDto_shouldThrowException(){
         String nonAdminId = member1.getId().toString();
-        assertThrows(NonAdminIdProvidedException.class, () -> memberService.registerLibrarian(createMemberDto, nonAdminId));
+        assertThrows(NoRightException.class, () -> memberService.registerLibrarian(createMemberDto, nonAdminId));
     }
 }
