@@ -29,17 +29,50 @@ class BookControllerTest {
     
     @Autowired
     private BookController bookController;
+    @Autowired
+    private BookRepository bookRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    private UUID admin;
+    private UUID normal;
+    private String authorId;
+    private BookDto bookToRetrieve;
 
     @BeforeEach
     void setup(){
+
+        Address address = new Address("Main Street", "1150", "12125", "New-York City");
+        Member memberAdmin = new Member.MemberBuilder()
+                .withINSS("123-456-789")
+                .withFirstname("François")
+                .withLastName("Pignon")
+                .withEmail("francoispignon@gmail.com")
+                .withAddress(address)
+                .withRole(Role.ADMIN)
+                .build();
+        Address address1 = new Address("Master Street", "4550", "34566", "Mannathan");
+        Member memberNormal = new Member.MemberBuilder()
+                .withINSS("122-456-789")
+                .withFirstname("Esteban")
+                .withLastName("Veraart")
+                .withEmail("Estebann@gmail.com")
+                .withAddress(address1)
+                .withRole(Role.MEMBER)
+                .build();
+        admin = memberAdmin.getId();
+        normal = memberNormal.getId();
+        memberRepository.save(memberAdmin);
+        memberRepository.save(memberNormal);
+
         BookDto book1 = new BookDto("isbn1", "title1", new Author("first1", "last1"), "1");
         bookToRetrieve = book1;
         BookDto book2 = new BookDto("isbn2", "title2", new Author("first2", "last2"), "1");
         BookDto book3 = new BookDto("isbn3", "title3", new Author("first3", "last3"), "1");
 
-        bookController.create(book1);
-        bookController.create(book2);
-        bookController.create(book3);
+        authorId = String.valueOf(book1.getAuthor().getUserId());
+        bookController.create(book1, admin.toString());
+        bookController.create(book2, admin.toString());
+        bookController.create(book3, admin.toString());
     }
 
     @Test
@@ -49,7 +82,7 @@ class BookControllerTest {
         BookDto newBook = new BookDto("isbn4", "title", new Author("first1", "last1"), "1");
 
         //When
-        BookDto savedBook = bookController.create(newBook);
+        BookDto savedBook = bookController.create(newBook, admin.toString());
 
         //Then
         assertThat(savedBook).isEqualTo(newBook);
