@@ -1,5 +1,7 @@
 package com.switchfully.digibooky.book.service.dto;
 
+import java.util.Objects;
+
 public class AuthorDto {
     private final String firstname;
     private final String lastname;
@@ -17,5 +19,16 @@ public class AuthorDto {
         return lastname;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AuthorDto authorDto = (AuthorDto) o;
+        return firstname.equals(authorDto.firstname) && lastname.equals(authorDto.lastname);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstname, lastname);
+    }
 }

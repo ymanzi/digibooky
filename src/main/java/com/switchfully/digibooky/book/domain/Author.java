@@ -6,8 +6,11 @@ public class Author {
     private final String firstname;
     private final String lastname;
 
+    //assertThrows
     public Author(String firstname, String lastname) {
         this.firstname = firstname;
+        /*if (lastname == null || lastname.isEmpty() || lastname.isBlank())
+            throw new NoAuthortLastnameException();*/
         this.lastname = lastname;
     }
 
