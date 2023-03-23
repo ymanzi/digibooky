@@ -36,7 +36,7 @@ public class RentalService {
             throw new NoRightException("the User with id: " + id + " is not allowed to request all rentals");
         return rentalMapper.toDtoList(rentalRepository.getAllRentals());
     }
-    public RentalDto rentBook(String userId, String ISBN){
+    public RentalDto rentBook(String ISBN, String userId){
         Book toRent = bookRepository.getByIsbn(ISBN).get(0);
         if (toRent == null || toRent.isDeleted() || toRent.getAmountInStore() == 0)
             throw new NoSuchBookInStoreException("The book with isbn: " + ISBN + " is not in store");

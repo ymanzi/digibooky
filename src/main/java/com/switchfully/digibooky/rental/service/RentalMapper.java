@@ -5,6 +5,8 @@ import com.switchfully.digibooky.member.service.MemberMapper;
 import com.switchfully.digibooky.rental.domain.Rental;
 import com.switchfully.digibooky.rental.service.dto.CreateRentalDto;
 import com.switchfully.digibooky.rental.service.dto.RentalDto;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.List;

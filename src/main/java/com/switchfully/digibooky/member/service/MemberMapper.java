@@ -4,10 +4,10 @@ import com.switchfully.digibooky.member.domain.Member;
 import com.switchfully.digibooky.member.domain.Role;
 import com.switchfully.digibooky.member.service.dtos.CreateMemberDto;
 import com.switchfully.digibooky.member.service.dtos.MemberDto;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.List;
-
 public class MemberMapper {
     public MemberDto toDto(Member member){
         return new MemberDto(member.getId(), member.getFirstname(), member.getLastName(), member.getEmail(), member.getAddress(), member.getRole());

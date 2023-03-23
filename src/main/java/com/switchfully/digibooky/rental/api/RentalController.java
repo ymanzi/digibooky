@@ -2,6 +2,7 @@ package com.switchfully.digibooky.rental.api;
 
 import com.switchfully.digibooky.rental.service.RentalService;
 import com.switchfully.digibooky.rental.service.dto.RentalDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,7 +12,7 @@ import java.util.List;
 @RequestMapping(path = "/rental")
 public class RentalController {
     private final RentalService rentalService;
-
+    @Autowired
     public RentalController(RentalService rentalService) {
         this.rentalService = rentalService;
     }
@@ -19,18 +20,18 @@ public class RentalController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<RentalDto> getAllRentals(@RequestHeader String id){
-        return getAllRentals(id);
+        return rentalService.getAllRentals(id);
     }
 
     @PostMapping(path = "/rentBook")
     @ResponseStatus(HttpStatus.CREATED)
-    public RentalDto rentBook(@RequestBody String ISBN, @RequestHeader String userID){
-        return rentBook(ISBN, userID);
+    public RentalDto rentBook(@RequestHeader String ISBN, @RequestHeader String userID){
+        return rentalService.rentBook(ISBN, userID);
     }
 
     @PostMapping(path = "/returnBook")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public String returnBook(@RequestBody String rentalID){
-        return returnBook(rentalID);
+        return rentalService.returnBook(rentalID);
     }
 }
