@@ -13,9 +13,10 @@ public class Author {
     //assertThrows
     public Author(String firstname, String lastname) {
         this.firstname = firstname;
-        /*if (lastname == null || lastname.isEmpty() || lastname.isBlank())
-            throw new NoAuthortLastnameException();*/
+        if (lastname == null || lastname.isEmpty() || lastname.isBlank())
+            throw new NoLastnameForAuthorException();
         this.lastname = lastname;
+        this.userId= userNumber++;
     }
 
     public String getFirstname() {
