@@ -67,6 +67,22 @@ public class BookRepository {
         return checkIfBookExists(listOfFoundBooks, "author");
     }
 
+    public Book update(Book updatedBook){
+        booksByIsbn.put(updatedBook.getIsbn(), updatedBook);
+        return booksByIsbn.get(updatedBook.getIsbn());
+    }
+
+    public Book delete(Book bookToDelete){
+        bookToDelete.toggleDeleted();
+        return update(bookToDelete);
+    }
+
+    public List<Book> delete(List<Book> listOfBooks){
+        return listOfBooks
+                .stream()
+                .map(this::delete)
+                .toList();
+    }
 
     public List<Book> checkIfBookExists(List<Book> listOfBooks, String typeOfException){
         if (listOfBooks == null /*|| listOfBooks.isDeleted()*/){
