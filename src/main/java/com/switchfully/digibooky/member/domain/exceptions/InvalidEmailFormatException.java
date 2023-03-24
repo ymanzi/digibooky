@@ -1,6 +1,6 @@
 package com.switchfully.digibooky.member.domain.exceptions;
 
-public class InvalidEmailFormatException extends RuntimeException {
+public class InvalidEmailFormatException extends InvalidFormatException {
     public InvalidEmailFormatException() {
     }
 

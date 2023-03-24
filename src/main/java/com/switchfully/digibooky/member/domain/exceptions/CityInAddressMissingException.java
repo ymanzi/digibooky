@@ -1,6 +1,6 @@
 package com.switchfully.digibooky.member.domain.exceptions;
 
-public class CityInAddressMissingException extends RuntimeException {
+public class CityInAddressMissingException extends MissingException {
     public CityInAddressMissingException() {
     }
 

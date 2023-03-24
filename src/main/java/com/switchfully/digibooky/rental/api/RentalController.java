@@ -3,7 +3,9 @@ package com.switchfully.digibooky.rental.api;
 import com.switchfully.digibooky.rental.service.RentalService;
 import com.switchfully.digibooky.rental.service.dto.RentalDto;
 import com.switchfully.digibooky.rental.service.exceptions.NoRightException;
-import jdk.jfr.StackTrace;
+import com.switchfully.digibooky.rental.service.exceptions.NoSuchBookInStoreException;
+import com.switchfully.digibooky.rental.service.exceptions.NoSuchMemberException;
+import com.switchfully.digibooky.rental.service.exceptions.NoSuchRentalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +57,7 @@ public class RentalController {
     public void handleNoRightException(Exception exception){
         logger.error(exception.getMessage(), exception);
     }
-    @ExceptionHandler
+    @ExceptionHandler({NoSuchMemberException.class, NoSuchRentalException.class, NoSuchBookInStoreException.class})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void handleException(Exception exception){
         logger.error(exception.getMessage(), exception);
