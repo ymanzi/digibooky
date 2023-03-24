@@ -46,6 +46,7 @@ class RentalRepositoryTest {
                 .withLastName("GVS")
                 .withEmail("henrigevenois@caramail.com")
                 .withRole(Role.MEMBER)
+                .withAddress(new Address("","","", "aa"))
                 .build();
         Rental rental2 = new Rental(book2, member2);
         rentalRepository.save(rental2);
@@ -88,6 +89,7 @@ class RentalRepositoryTest {
                 .withLastName("GVS")
                 .withEmail("henrigevenois@caramail.com")
                 .withRole(Role.MEMBER)
+                .withAddress(new Address("", "", "", "Seattle"))
                 .build();
         Rental unknownRental = new Rental(book2, member2);
         assertThrows(NoSuchRentalException.class, () -> rentalRepository.deleteRental(unknownRental));

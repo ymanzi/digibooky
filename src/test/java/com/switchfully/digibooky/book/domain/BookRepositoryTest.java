@@ -185,9 +185,9 @@ class BookRepositoryTest {
                 "titleUpdated",
                 new Author("fnUpdated", "lnUpdated"),
                 "summaryUpdated"));
-
+        Book expectedBook = bookRepository.getByIsbn(bookAfterUpdate.getIsbn()).get(0);
         // Then
-        assertThat(bookToUpdate).isEqualTo(bookAfterUpdate);
+        assertThat(expectedBook).isEqualTo(bookAfterUpdate);
     }
 
     @Test

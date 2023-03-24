@@ -1,5 +1,6 @@
 package com.switchfully.digibooky.book.domain;
 
+import com.switchfully.digibooky.book.exceptions.NoLastnameForAuthorException;
 import com.switchfully.digibooky.book.exceptions.NoTitleForBookException;
 import org.junit.jupiter.api.Test;
 
@@ -28,19 +29,19 @@ public class BookTest {
     @Test
     void createBookWithEmptyAuthorLastname_thenRaiseNoTitleForBookException() {
         //Then
-        assertThrows(NoTitleForBookException.class, () -> new Book("isbn", "title", new Author("first", ""), "summary"));
+        assertThrows(NoLastnameForAuthorException.class, () -> new Book("isbn", "title", new Author("first", ""), "summary"));
     }
 
     @Test
     void createBookWithBlankAuthorLastname_thenRaiseNoTitleForBookException() {
         //Then
-        assertThrows(NoTitleForBookException.class, () -> new Book("isbn", "title", new Author("first", "     "), "summary"));
+        assertThrows(NoLastnameForAuthorException.class, () -> new Book("isbn", "title", new Author("first", "     "), "summary"));
     }
 
     @Test
     void createBookWithNullAuthorLastname_thenRaiseNoTitleForBookException() {
         //Then
-        assertThrows(NoTitleForBookException.class, () -> new Book("isbn", "title", new Author("first", null), "summary"));
+        assertThrows(NoLastnameForAuthorException.class, () -> new Book("isbn", "title", new Author("first", null), "summary"));
     }
 
 }

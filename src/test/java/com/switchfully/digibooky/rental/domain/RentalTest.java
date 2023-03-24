@@ -48,6 +48,7 @@ public class RentalTest {
                 .withLastName("GVS")
                 .withEmail("henrigevenois@caramail.com")
                 .withRole(Role.MEMBER)
+                .withAddress(new Address("", "", "", "Seattle"))
                 .build();
         Rental rental2 = new Rental(book2, member2);
         Rental rental3 = rental;
