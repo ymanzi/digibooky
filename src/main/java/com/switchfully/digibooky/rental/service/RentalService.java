@@ -51,9 +51,6 @@ public class RentalService {
     }
     public String returnBook(String rentalId){
         Rental rental = rentalRepository.getRentalById(UUID.fromString(rentalId));
-        if (rental == null){
-            throw new NoSuchRentalException("Rental with id: " + rentalId + "does not exist");
-        }
         rentalRepository.deleteRental(rental);
         rental.getRenter().returnBook(rental);
         rental.getBookRented().increaseAmountInStore(1);

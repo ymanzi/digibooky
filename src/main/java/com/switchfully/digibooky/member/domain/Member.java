@@ -131,11 +131,13 @@ public class Member {
         }
         public Member build(){
             if (INSS == null)
-                throw new INSSMissingException();
+                throw new INSSMissingException("No Inss provided");
             if (email == null)
-                throw new EmailMissingException();
+                throw new EmailMissingException("No Email provided");
             if (lastName == null)
-                throw new LastNameMissingException();
+                throw new LastNameMissingException("No LastName provided");
+            if (address == null)
+                throw new CityInAddressMissingException("No address provided");
             return new Member(INSS,firstname,lastName,email,address,role);
         }
     }

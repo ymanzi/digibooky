@@ -2,6 +2,12 @@ package com.switchfully.digibooky.rental.api;
 
 import com.switchfully.digibooky.rental.service.RentalService;
 import com.switchfully.digibooky.rental.service.dto.RentalDto;
+import com.switchfully.digibooky.rental.service.exceptions.NoRightException;
+import com.switchfully.digibooky.rental.service.exceptions.NoSuchBookInStoreException;
+import com.switchfully.digibooky.rental.service.exceptions.NoSuchMemberException;
+import com.switchfully.digibooky.rental.service.exceptions.NoSuchRentalException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +18,7 @@ import java.util.List;
 @RequestMapping(path = "/rental")
 public class RentalController {
     private final RentalService rentalService;
+    Logger logger = LoggerFactory.getLogger(RentalController.class);
     @Autowired
     public RentalController(RentalService rentalService) {
         this.rentalService = rentalService;
@@ -44,5 +51,15 @@ public class RentalController {
     @ResponseStatus(HttpStatus.OK)
     public List<RentalDto> getAllOverdueRentals(@RequestHeader String userId){
         return rentalService.getAllOverdueRentals(userId);
+    }
+    @ExceptionHandler(NoRightException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public void handleNoRightException(Exception exception){
+        logger.error(exception.getMessage(), exception);
+    }
+    @ExceptionHandler({NoSuchMemberException.class, NoSuchRentalException.class, NoSuchBookInStoreException.class})
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void handleException(Exception exception){
+        logger.error(exception.getMessage(), exception);
     }
 }

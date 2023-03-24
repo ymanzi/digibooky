@@ -1,8 +1,15 @@
 package com.switchfully.digibooky.member.api;
 
+import com.switchfully.digibooky.member.domain.exceptions.EmailAlreadyExistsException;
+import com.switchfully.digibooky.member.domain.exceptions.INSSAlreadyExistsException;
+import com.switchfully.digibooky.member.domain.exceptions.InvalidFormatException;
+import com.switchfully.digibooky.member.domain.exceptions.MissingException;
 import com.switchfully.digibooky.member.service.dtos.CreateMemberDto;
 import com.switchfully.digibooky.member.service.dtos.MemberDto;
 import com.switchfully.digibooky.member.service.MemberService;
+import com.switchfully.digibooky.rental.service.exceptions.NoRightException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +19,7 @@ import java.util.List;
 @RequestMapping(path = "/members")
 public class MemberController {
     private final MemberService service;
+    Logger logger = LoggerFactory.getLogger(MemberController.class);
 
     public MemberController(MemberService service) {
         this.service = service;
@@ -23,8 +31,8 @@ public class MemberController {
     }
     @GetMapping(path = "/admin")
     @ResponseStatus(HttpStatus.OK)
-    public String getAdminId(){
-        return service.getAdminId();
+    public void getAdminId(){
+        logger.info(service.getAdminId());
     }
     @PostMapping(path = "/register")
     @ResponseStatus(HttpStatus.CREATED)
@@ -35,5 +43,25 @@ public class MemberController {
     @ResponseStatus(HttpStatus.CREATED)
     public MemberDto registerLibrarian(@RequestBody CreateMemberDto memberDto, @RequestHeader String id){
         return service.registerLibrarian(memberDto, id);
+    }
+    @ExceptionHandler({MissingException.class, InvalidFormatException.class})
+    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+    public String handleMissingExceptionsAndFormatExceptions(Exception exception) {
+        return exception.getMessage();
+    }
+    @ExceptionHandler({EmailAlreadyExistsException.class, INSSAlreadyExistsException.class})
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public String handleAlreadyExistExceptions(Exception exception){
+        return exception.getMessage();
+    }
+    @ExceptionHandler(NoRightException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public String handleNoRightException(Exception exception){
+        return exception.getMessage();
+    }
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void handleExceptions(Exception exception){
+        logger.error(exception.getMessage(),exception);
     }
 }

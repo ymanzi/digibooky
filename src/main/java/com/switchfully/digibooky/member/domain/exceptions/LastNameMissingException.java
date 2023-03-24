@@ -1,6 +1,6 @@
 package com.switchfully.digibooky.member.domain.exceptions;
 
-public class LastNameMissingException extends RuntimeException {
+public class LastNameMissingException extends MissingException {
     public LastNameMissingException() {
     }
 
