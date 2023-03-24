@@ -30,7 +30,8 @@ public class BookRepository {
     }
 
     public Book save(Book book){
-        booksByIsbn.put(book.getIsbn(), book);
+        throwErrorIfBookExists(book);
+        Book savedBook = booksByIsbn.put(book.getIsbn(), book);
         return book;
     }
 
