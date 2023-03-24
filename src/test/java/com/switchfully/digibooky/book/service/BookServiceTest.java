@@ -1,6 +1,7 @@
 package com.switchfully.digibooky.book.service;
 
 import com.switchfully.digibooky.book.domain.Author;
+import com.switchfully.digibooky.book.service.dto.AuthorDto;
 import com.switchfully.digibooky.book.service.dto.BookDto;
 import com.switchfully.digibooky.member.domain.Address;
 import com.switchfully.digibooky.member.domain.Member;
@@ -26,12 +27,10 @@ class BookServiceTest {
     @Autowired
     private BookService bookService;
     @Autowired
-    private AuthorMapper authorMapper;
-    @Autowired
     private MemberRepository memberRepository;
     private UUID admin;
     private UUID normal;
-    private int userId;
+    private BookDto bookToRetrieve;
 
     @BeforeEach
     void setup(){
@@ -60,7 +59,6 @@ class BookServiceTest {
         BookDto book1 = new BookDto("1234567891", "book1", new Author("Esteban", "Veraart"), "a cool book" );
         bookToRetrieve = book1;
         BookDto book2 = new BookDto("9876543210", "book2", new Author("Maxime", "Rouve"), "a no cool book" );
-        userId = book2.getAuthor().getUserId();
         bookService.save(book1, memberAdmin.getId().toString());
         bookService.save(book2, memberAdmin.getId().toString());
 
@@ -130,9 +128,9 @@ class BookServiceTest {
     }
 
     @Test
-    void getByAuthor_givenAnUnknownAuthorId_thenRetrieveAnEmptyList() {
+    void getByAuthor_givenAnUnknownAuthor_thenRetrieveAnEmptyList() {
         //then
-        assertTrue(bookService.getByAuthor("35").isEmpty());
+        assertTrue(bookService.getByAuthor(new AuthorDto("Estebane", "Veraart")).isEmpty());
     }
 
     @Test

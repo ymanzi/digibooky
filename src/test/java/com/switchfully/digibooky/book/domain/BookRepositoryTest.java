@@ -117,9 +117,11 @@ class BookRepositoryTest {
 
     @Test
     void getByIsbn_givenANonExistingAuthor_thenReturnEmptyList() {
+        //given
+        Author esteban = new Author("Eseban","Veraart");
 
         //Then
-        assertTrue(bookRepository.getByAuthor("45").isEmpty());
+        assertTrue(bookRepository.getByAuthor(esteban).isEmpty());
     }
 
 

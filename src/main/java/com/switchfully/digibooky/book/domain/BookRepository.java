@@ -1,8 +1,7 @@
 package com.switchfully.digibooky.book.domain;
 
-import com.switchfully.digibooky.book.exceptions.NoBookByAuthorException;
-import com.switchfully.digibooky.book.exceptions.NoBookByIsbnException;
-import com.switchfully.digibooky.book.exceptions.NoBookByTitleException;
+import com.switchfully.digibooky.book.exceptions.BookWithThisIsbnAlreadyExist;
+import com.switchfully.digibooky.book.exceptions.CanNotUpdateNonExistingBook;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -54,13 +53,26 @@ public class BookRepository {
                 .collect(Collectors.toList());
     }
 
-    public List<Book> getByAuthor(String authorId){
-        List<Book> listOfFoundBooks = booksByIsbn
+    public List<Book> getByAuthor(Author author){
+        return booksByIsbn
                 .values()
                 .stream()
                 .filter(book -> !book.isDeleted())
-                .filter(book -> String.valueOf(book.getAuthor().getUserId()).equals(authorId) )
+                .filter(book -> authorIsEqual(author, book))
                 .collect(Collectors.toList());
+    }
+
+    private boolean authorIsEqual(Author author, Book book) {
+        if (!author.getFirstname().isBlank() && !author.getLastname().isBlank()) {
+            return checkWildcard(book.getAuthor().getFirstname(), author.getFirstname()) && checkWildcard(book.getAuthor().getLastname(), author.getLastname());
+        }
+        if (author.getFirstname().isBlank() && !author.getLastname().isBlank()) {
+            return checkWildcard(book.getAuthor().getLastname(), author.getLastname());
+        }
+        if (!author.getFirstname().isBlank() && author.getLastname().isBlank()) {
+            return checkWildcard(book.getAuthor().getFirstname(), author.getFirstname());
+        }
+        return false;
     }
 
     public Book update(Book updatedBook){
@@ -83,13 +95,9 @@ public class BookRepository {
                 .toList();
     }
 
-    public List<Book> checkIfBookExists(List<Book> listOfBooks, String typeOfException){
-        if (listOfBooks == null /*|| listOfBooks.isDeleted()*/){
-            switch(typeOfException){
-                case "isbn" -> throw new NoBookByIsbnException();
-                case "title" -> throw new NoBookByTitleException();
-                case "author" -> throw new NoBookByAuthorException();
-            }
+    public void throwErrorIfBookExists(Book book){
+        if (checkIfBookExist(book)) {
+            throw new BookWithThisIsbnAlreadyExist();
         }
     }
     

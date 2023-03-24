@@ -25,8 +25,6 @@ public class Author {
         return lastname;
     }
 
-    public UUID getUserId() { return authorId;}
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

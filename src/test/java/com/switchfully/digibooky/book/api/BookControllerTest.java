@@ -36,7 +36,6 @@ class BookControllerTest {
     private MemberRepository memberRepository;
     private UUID admin;
     private UUID normal;
-    private String authorId;
     private BookDto bookToRetrieve;
 
     @BeforeEach
@@ -70,7 +69,6 @@ class BookControllerTest {
         BookDto book2 = new BookDto("isbn2", "title2", new Author("first2", "last2"), "1");
         BookDto book3 = new BookDto("isbn3", "title3", new Author("first3", "last3"), "1");
 
-        authorId = String.valueOf(book1.getAuthor().getUserId());
         bookController.create(book1, admin.toString());
         bookController.create(book2, admin.toString());
         bookController.create(book3, admin.toString());
@@ -142,6 +140,7 @@ class BookControllerTest {
 
     @Test
     void getByAuthor_givenARepositoryWithBooks_thenRetrieveTheBookWithTheGivenAuthor() {
+
         //When
         List<BookDto> listOfBooks = bookController.getByAuthor(new AuthorDto("first1", "last1"));
 
@@ -153,7 +152,7 @@ class BookControllerTest {
     void getByAuthor_givenANonExistingAuthor_thenReturnEmptyList() {
 
         //Then
-        assertTrue(bookController.getByAuthor("45").isEmpty());
+        assertTrue(bookController.getByAuthor(new AuthorDto("Esteban", "Veraart")).isEmpty());
     }
 
     @Test
@@ -162,7 +161,7 @@ class BookControllerTest {
         //Then
         Assertions.assertThatRuntimeException()
                 .isThrownBy(() -> bookController.getByAuthor(null))
-                .withMessage("There is no book with the requested author");
+                .withMessage("The author can not be null");
     }
 
     @Test
