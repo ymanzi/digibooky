@@ -2,7 +2,6 @@ package com.switchfully.digibooky.rental.service;
 
 import com.switchfully.digibooky.book.domain.Author;
 import com.switchfully.digibooky.book.domain.Book;
-import com.switchfully.digibooky.book.service.dto.BookDto;
 import com.switchfully.digibooky.member.domain.Address;
 import com.switchfully.digibooky.member.domain.Member;
 import com.switchfully.digibooky.rental.domain.Rental;
@@ -61,8 +60,8 @@ public class RentalMapperTest {
         RentalDto rentalDto = rentalMapper.toDto(rental);
         assertNotNull(rentalDto.getRentalId());
         assertEquals(rental.getReturnDate(), rentalDto.getReturnDate());
-        assertEquals(rental.getRenter(), rentalDto.getRenter());
-        assertEquals(rental.getBookRented(), rentalDto.getBookRented());
+        assertEquals(rental.getRenter().getId(), rentalDto.getRenter().getId());
+        assertEquals(rental.getBookRented().getIsbn(), rentalDto.getBookRented().getIsbn());
     }
 
     @Test
@@ -76,12 +75,12 @@ public class RentalMapperTest {
         assertEquals(2, rentalDtos.size());
         assertEquals(rental1.getRentalId(), rentalDtos.get(0).getRentalId());
         assertEquals(rental2.getRentalId(), rentalDtos.get(1).getRentalId());
-        assertEquals(rental1.getRenter(), rentalDtos.get(0).getRenter());
-        assertEquals(rental2.getRenter(), rentalDtos.get(1).getReturnDate());
+        assertEquals(rental1.getRenter().getEmail(), rentalDtos.get(0).getRenter().getEmail());
+        assertEquals(rental2.getRenter().getEmail(), rentalDtos.get(1).getRenter().getEmail());
         assertEquals(rental1.getReturnDate(), rentalDtos.get(0).getReturnDate());
         assertEquals(rental2.getReturnDate(), rentalDtos.get(1).getReturnDate());
-        assertEquals(rental1.getBookRented(), rentalDtos.get(0).getBookRented());
-        assertEquals(rental2.getBookRented(), rentalDtos.get(1).getBookRented());
+        assertEquals(rental1.getBookRented().getIsbn(), rentalDtos.get(0).getBookRented().getIsbn());
+        assertEquals(rental2.getBookRented().getIsbn(), rentalDtos.get(1).getBookRented().getIsbn());
     }
 
 
