@@ -114,6 +114,13 @@ public class MemberTest {
                 .withEmail("kobebryant@gmail.")
                 .withAddress(address)
                 .build());
+        Assertions.assertDoesNotThrow(() -> new Member.MemberBuilder()
+                .withINSS("123-456-789-012")
+                .withLastName("Bryant")
+                .withFirstname("Kobe")
+                .withEmail("kobebryant@gmail.com")
+                .withAddress(address)
+                .build());
     }
 
     @Test
