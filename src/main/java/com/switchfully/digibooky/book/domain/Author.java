@@ -3,10 +3,10 @@ package com.switchfully.digibooky.book.domain;
 import com.switchfully.digibooky.book.exceptions.NoLastnameForAuthorException;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class Author {
-    private final int userId;
-    private static int userNumber = 1;
+    private final UUID authorId;
     private final String firstname;
     private final String lastname;
 
@@ -16,7 +16,7 @@ public class Author {
         if (lastname == null || lastname.isEmpty() || lastname.isBlank())
             throw new NoLastnameForAuthorException();
         this.lastname = lastname;
-        this.userId= userNumber++;
+        this.authorId= UUID.randomUUID();
     }
 
     public String getFirstname() {
@@ -27,7 +27,7 @@ public class Author {
         return lastname;
     }
 
-    public int getUserId() { return userId;}
+    public UUID getUserId() { return authorId;}
 
     @Override
     public boolean equals(Object o) {
