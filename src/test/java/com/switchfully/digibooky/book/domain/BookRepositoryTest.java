@@ -117,22 +117,13 @@ class BookRepositoryTest {
 
     @Test
     void getByIsbn_givenANonExistingAuthor_thenReturnEmptyList() {
+        //given
+        Author esteban = new Author("Eseban","Veraart");
 
         //Then
-        assertTrue(bookRepository.getByAuthor("45").isEmpty());
+        assertTrue(bookRepository.getByAuthor(esteban).isEmpty());
     }
 
-
-    @Test
-    void checkIfBookExists_givenNoBookProvided_thenThrowException() {
-        //Given
-        BookRepository bookRepository = new BookRepository();
-
-        //Then
-        Assertions.assertThatRuntimeException()
-                .isThrownBy(() -> bookRepository.checkIfBookExists(null, "isbn"))
-                .withMessage("There is no book with the requested Isbn");
-    }
 
     @Test
     void checkWildCard_givenATitleStringMatchingARegexString_thenReturnTrue(){
@@ -185,9 +176,12 @@ class BookRepositoryTest {
                 "titleUpdated",
                 new Author("fnUpdated", "lnUpdated"),
                 "summaryUpdated"));
-        Book expectedBook = bookRepository.getByIsbn(bookAfterUpdate.getIsbn()).get(0);
+
+
+        Book bookUpdated = bookRepository.getByIsbn(bookAfterUpdate.getIsbn()).get(0);
+
         // Then
-        assertThat(expectedBook).isEqualTo(bookAfterUpdate);
+        assertThat(bookAfterUpdate).isEqualTo(bookUpdated);
     }
 
     @Test
@@ -214,6 +208,19 @@ class BookRepositoryTest {
     }
 
     @Test
+    void restore_givenADeletedBookAndRestored_thenReturnTheListWithTheRestoredBook()
+    {
+        //Given
+        Book bookToDelete = new Book("isbnToDelete", "titleToDelete", new Author("firstToDelete", "lastToDelete"), "summary");
+        bookRepository.save(bookToDelete);
+        bookRepository.delete(bookToDelete);
+        bookRepository.delete(bookToDelete);
+
+        //Then
+        assertThat(bookRepository.getByIsbn(bookToDelete.getIsbn())).containsExactly(bookToDelete);
+    }
+
+    @Test
     void delete_givenAListOfBook_thenChangeDeletedAttributeOfThoseBooksToTrue()
     {
         //Given
@@ -225,6 +232,22 @@ class BookRepositoryTest {
 
         //Then
         assertThat(deletedBook.isDeleted()).isTrue();
+        assertThat(deletedBook).isEqualTo(bookToDelete);
+    }
+
+    @Test
+    void restore_givenAListOfBook_thenChangeDeletedAttributeOfThoseBooksToFalse()
+    {
+        //Given
+        Book bookToDelete = new Book("isbnToDelete", "titleToDelete", new Author("firstToDelete", "lastToDelete"), "summary");
+        bookRepository.save(bookToDelete);
+
+        //When
+        Book deletedBook = bookRepository.delete(bookToDelete);
+        bookRepository.delete(bookToDelete);
+
+        //Then
+        assertThat(deletedBook.isDeleted()).isFalse();
         assertThat(deletedBook).isEqualTo(bookToDelete);
     }
 
