@@ -1,5 +1,6 @@
 package com.switchfully.digibooky.rental.domain;
 
+import com.switchfully.digibooky.rental.service.exceptions.NoSuchRentalException;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
@@ -21,12 +22,17 @@ public class RentalRepository {
     }
     public Rental getRentalById(UUID rentalId){
         Rental rental = rentalByUUIDRepository.get(rentalId);
+        if (rental == null){
+            throw new NoSuchRentalException("Rental with id: " + rentalId + "does not exist");
+        }
         return rental;
     }
     public Collection<Rental> getAllRentals(){
         return rentalByUUIDRepository.values();
     }
     public Rental deleteRental(Rental rental){
+        if(!rentalByUUIDRepository.containsValue(rental))
+            throw new NoSuchRentalException("Rental does not exist");
         rentalByUUIDRepository.remove(rental.getRentalId());
         return rental;
     }
