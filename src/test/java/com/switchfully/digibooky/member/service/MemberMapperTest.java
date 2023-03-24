@@ -1,10 +1,9 @@
-package com.switchfully.digibooky.member.api.service.mapper;
+package com.switchfully.digibooky.member.service;
 
 import com.switchfully.digibooky.member.domain.*;
 import com.switchfully.digibooky.member.service.*;
 import com.switchfully.digibooky.member.service.dtos.CreateMemberDto;
 import com.switchfully.digibooky.member.service.dtos.MemberDto;
-import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -54,11 +53,11 @@ public class MemberMapperTest {
     }
     @Test
     void test_fromDto(){
-        CreateMemberDto createMemberDto = new CreateMemberDto(member.getINSS(), member.getFirstname(), member.getLastName(), member.getEmail(), member.getAddress());
+        CreateMemberDto createMemberDto = new CreateMemberDto(member.getInss(), member.getFirstname(), member.getLastName(), member.getEmail(), member.getAddress());
         Member member2 = new MemberMapper().fromDto(createMemberDto, Role.MEMBER);
 
         assertNotNull(member2.getId());
-        assertEquals("123-456-789", member2.getINSS());
+        assertEquals("123-456-789", member2.getInss());
         assertEquals("Albert", member2.getFirstname());
         assertEquals("Einstein", member2.getLastName());
         assertEquals("alberteinstein@princetown.edu", member2.getEmail());

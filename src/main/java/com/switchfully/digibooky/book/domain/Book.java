@@ -12,6 +12,7 @@ public class Book {
     private Author author;
     private String summary;
     private Boolean deleted = false;
+    private int amountInStore;
 
     public Book(String isbn, String title, Author author, String summary) {
         if (isbn == null || isbn.isEmpty() || isbn.isBlank())
@@ -25,6 +26,7 @@ public class Book {
         this.title = title;
         this.author = author;
         this.summary = summary;
+        amountInStore = 1;
     }
 
     public String getIsbn() {
@@ -50,9 +52,14 @@ public class Book {
     public void setSummary(String summary) {
         this.summary = summary;
     }
-
-    public void setTitle(String title) {
-        this.title = title;
+    public int getAmountInStore() {
+        return amountInStore;
+    }
+    public void decreaseAmountInStore(int amount){
+        amountInStore-= amount;
+    }
+    public void  increaseAmountInStore(int amount){
+        amountInStore += amount;
     }
 
     public void setAuthor(Author author) {

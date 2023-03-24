@@ -5,6 +5,7 @@ import com.switchfully.digibooky.member.domain.MemberRepository;
 import com.switchfully.digibooky.member.domain.Role;
 import com.switchfully.digibooky.member.service.dtos.CreateMemberDto;
 import com.switchfully.digibooky.member.service.dtos.MemberDto;
+import com.switchfully.digibooky.rental.service.exceptions.NoRightException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class MemberService {
     }
     public List<MemberDto> getAllMembers(String id){
         if (repository.getMemberById(UUID.fromString(id)).getRole() != Role.ADMIN){
-            throw new RuntimeException("placeholder, should be 403");
+            throw new NoRightException();
         }
         return mapper.memberListToDto(repository.getAllMembers());
     }
@@ -33,7 +34,7 @@ public class MemberService {
 
     public MemberDto registerLibrarian(CreateMemberDto memberDto, String id) {
         if (repository.getMemberById(UUID.fromString(id)).getRole() != Role.ADMIN){
-            throw new RuntimeException("placeholder");
+            throw new NoRightException();
         }
         return mapper.toDto(repository.save(mapper.fromDto(memberDto, Role.LIBRARIAN)));
     }
