@@ -3,6 +3,8 @@ package com.switchfully.digibooky.member.api;
 import com.switchfully.digibooky.member.service.dtos.CreateMemberDto;
 import com.switchfully.digibooky.member.service.dtos.MemberDto;
 import com.switchfully.digibooky.member.service.MemberService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +14,7 @@ import java.util.List;
 @RequestMapping(path = "/members")
 public class MemberController {
     private final MemberService service;
+    Logger logger = LoggerFactory.getLogger(MemberController.class);
 
     public MemberController(MemberService service) {
         this.service = service;
@@ -23,8 +26,8 @@ public class MemberController {
     }
     @GetMapping(path = "/admin")
     @ResponseStatus(HttpStatus.OK)
-    public String getAdminId(){
-        return service.getAdminId();
+    public void getAdminId(){
+        logger.info(service.getAdminId());
     }
     @PostMapping(path = "/register")
     @ResponseStatus(HttpStatus.CREATED)
