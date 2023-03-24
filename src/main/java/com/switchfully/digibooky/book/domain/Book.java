@@ -8,7 +8,7 @@ public class Book {
     private Author author;
     private String summary;
     private int amountInStore;
-    private Boolean isDeleted;
+    private boolean deleted;
 
     public Book(String isbn, String title, Author author, String summary) {
         this.isbn = isbn;
@@ -16,7 +16,7 @@ public class Book {
         this.author = author;
         this.summary = summary;
         amountInStore = 1;
-        isDeleted = false;
+        deleted = false;
     }
 
     public String getIsbn() {
@@ -40,20 +40,13 @@ public class Book {
     }
 
     public Boolean isDeleted() {
-        return isDeleted;
+        return deleted;
     }
     public void decreaseAmountInStore(int amount){
         amountInStore-= amount;
     }
     public void  increaseAmountInStore(int amount){
         amountInStore += amount;
-    }
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public void setAuthor(Author author) {

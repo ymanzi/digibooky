@@ -57,10 +57,6 @@ public class Member {
         return role;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
     public List<Rental> getRentedBooks() {
         return rentedBooks;
     }

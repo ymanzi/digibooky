@@ -19,20 +19,20 @@ public class RentalController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<RentalDto> getAllRentals(@RequestHeader String id){
-        return rentalService.getAllRentals(id);
+    public List<RentalDto> getAllRentals(@RequestHeader String userId){
+        return rentalService.getAllRentals(userId);
     }
 
     @PostMapping(path = "/rentBook")
     @ResponseStatus(HttpStatus.CREATED)
-    public RentalDto rentBook(@RequestHeader String ISBN, @RequestHeader String userID){
-        return rentalService.rentBook(ISBN, userID);
+    public RentalDto rentBook(@RequestHeader String ISBN, @RequestHeader String userId){
+        return rentalService.rentBook(ISBN, userId);
     }
 
     @PostMapping(path = "/returnBook")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public String returnBook(@RequestBody String rentalID){
-        return rentalService.returnBook(rentalID);
+    public String returnBook(@RequestBody String rentalId){
+        return rentalService.returnBook(rentalId);
     }
 
     @GetMapping(path = "/{memberId}")
