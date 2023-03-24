@@ -6,7 +6,6 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class Author {
-    private final UUID authorId;
     private final String firstname;
     private final String lastname;
 
@@ -16,7 +15,6 @@ public class Author {
         if (lastname == null || lastname.isEmpty() || lastname.isBlank())
             throw new NoLastnameForAuthorException();
         this.lastname = lastname;
-        this.authorId= UUID.randomUUID();
     }
 
     public String getFirstname() {

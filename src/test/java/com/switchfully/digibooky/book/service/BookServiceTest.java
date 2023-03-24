@@ -2,7 +2,6 @@ package com.switchfully.digibooky.book.service;
 
 import com.switchfully.digibooky.book.domain.Author;
 import com.switchfully.digibooky.book.service.dto.BookDto;
-import com.switchfully.digibooky.book.service.mapper.AuthorMapper;
 import com.switchfully.digibooky.member.domain.Address;
 import com.switchfully.digibooky.member.domain.Member;
 import com.switchfully.digibooky.member.domain.MemberRepository;
@@ -59,6 +58,7 @@ class BookServiceTest {
         memberRepository.save(memberAdmin);
         memberRepository.save(memberNormal);
         BookDto book1 = new BookDto("1234567891", "book1", new Author("Esteban", "Veraart"), "a cool book" );
+        bookToRetrieve = book1;
         BookDto book2 = new BookDto("9876543210", "book2", new Author("Maxime", "Rouve"), "a no cool book" );
         userId = book2.getAuthor().getUserId();
         bookService.save(book1, memberAdmin.getId().toString());
@@ -122,13 +122,11 @@ class BookServiceTest {
 
     @Test
     void getByAuthor_givenALstOfBooks_thenBookRetrievedIsEqualToTheBook1() {
-        BookDto book1 = new BookDto("9876543210", "book2", new Author("Maxime", "Rouve"), "a no cool book" );
-
         //when
-        List<BookDto> listOfBookRetrieved = bookService.getByAuthor(String.valueOf(userId));
+        List<BookDto> listOfBookRetrieved = bookService.getByAuthor(new AuthorDto("Esteban", "Veraart"));
 
         //then
-        assertThat(listOfBookRetrieved).containsExactly(book1);
+        assertThat(listOfBookRetrieved).containsExactly(bookToRetrieve);
     }
 
     @Test
@@ -139,7 +137,7 @@ class BookServiceTest {
 
     @Test
     void save_givenABookToSave_thenSavedBookIsEqualToTheBookToSaveWithAnAdminMember() {
-        BookDto bookToSave = new BookDto("9876543210", "book2", new Author("Maxime", "Rouve"), "a no cool book" );
+        BookDto bookToSave = new BookDto("9876543210gg", "book2", new Author("Maxime", "Rouve"), "a no cool book" );
 
         //when
         BookDto bookSaved = bookService.save(bookToSave, admin.toString());
@@ -181,7 +179,7 @@ class BookServiceTest {
         BookDto bookToDelete = new BookDto("9876543210", "book2", new Author("Maxime", "Rouve"), "a no cool book" );
         //when
         Assertions.assertThatRuntimeException()
-                .isThrownBy(() -> bookService.delete(bookToDelete.getIsbn(), normal.toString(),"isbn"))
+                .isThrownBy(() -> bookService.deleteOrRestore(bookToDelete.getIsbn(), normal.toString(),"isbn"))
                 .withMessage("Unauthorized End Point!");
     }
 

@@ -42,19 +42,16 @@ public class BookRepository {
                 .filter(book -> !book.isDeleted())
                 .filter(book -> checkWildcard(book.getIsbn(), isbn))
                 .collect(Collectors.toList());
-
-        return checkIfBookExists(listOfFoundBooks, "isbn");
+        return listOfFoundBooks;
     }
 
     public List<Book> getByTitle(String title){
-        List<Book> listOfFoundBooks = booksByIsbn
+        return  booksByIsbn
                 .values()
                 .stream()
                 .filter(book -> !book.isDeleted())
                 .filter(book -> checkWildcard(book.getTitle(), title))
                 .collect(Collectors.toList());
-
-        return checkIfBookExists(listOfFoundBooks, "title");
     }
 
     public List<Book> getByAuthor(String authorId){
@@ -64,13 +61,14 @@ public class BookRepository {
                 .filter(book -> !book.isDeleted())
                 .filter(book -> String.valueOf(book.getAuthor().getUserId()).equals(authorId) )
                 .collect(Collectors.toList());
-
-        return checkIfBookExists(listOfFoundBooks, "author");
     }
 
     public Book update(Book updatedBook){
+        if (!checkIfBookExist(updatedBook)) {
+            throw new CanNotUpdateNonExistingBook();
+        }
         booksByIsbn.put(updatedBook.getIsbn(), updatedBook);
-        return booksByIsbn.get(updatedBook.getIsbn());
+        return updatedBook;
     }
 
     public Book delete(Book bookToDelete){
@@ -93,7 +91,10 @@ public class BookRepository {
                 case "author" -> throw new NoBookByAuthorException();
             }
         }
-        return listOfBooks;
+    }
+    
+    public boolean checkIfBookExist(Book book){
+        return booksByIsbn.containsKey(book.getIsbn());
     }
 
     public boolean checkWildcard(String stringToCheck, String regexString){

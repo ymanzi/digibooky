@@ -3,6 +3,7 @@ package com.switchfully.digibooky.book.api;
 import com.switchfully.digibooky.book.domain.Author;
 import com.switchfully.digibooky.book.domain.Book;
 import com.switchfully.digibooky.book.domain.BookRepository;
+import com.switchfully.digibooky.book.service.dto.AuthorDto;
 import com.switchfully.digibooky.book.service.dto.BookDto;
 import com.switchfully.digibooky.member.domain.Address;
 import com.switchfully.digibooky.member.domain.Member;
@@ -142,7 +143,7 @@ class BookControllerTest {
     @Test
     void getByAuthor_givenARepositoryWithBooks_thenRetrieveTheBookWithTheGivenAuthor() {
         //When
-        List<BookDto> listOfBooks = bookController.getByAuthor(authorId);
+        List<BookDto> listOfBooks = bookController.getByAuthor(new AuthorDto("first1", "last1"));
 
         //Then
         assertThat(listOfBooks).containsExactly(bookToRetrieve);
@@ -199,4 +200,5 @@ class BookControllerTest {
         assertThat(deletedBooks).containsExactlyInAnyOrder(bookToDelete1, bookToDelete);
         assertTrue(bookRepository.getByIsbn(bookToDelete.getIsbn()).isEmpty());
     }
+
 }
