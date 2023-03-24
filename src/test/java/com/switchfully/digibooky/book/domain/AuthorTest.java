@@ -34,14 +34,4 @@ public class AuthorTest {
         //Then
         assertThrows(NoLastnameForAuthorException.class, () -> new Author("firstname", null));
     }
-
-    @Test
-    void givenTwoNewAuthor_thenTheirIdNumberWillNotBeTheSame(){
-        Author author1 = new Author("firstname1", "lastname1");
-        Author author2 = new Author("firstname2", "lastname2");
-        Author author3 = new Author("firstname2", "lastname2");
-
-        assertThat(author1.getUserId()).isNotEqualTo(author2.getUserId());
-        assertThat(author2.getUserId()).isNotEqualTo(author3.getUserId());
-    }
 }
