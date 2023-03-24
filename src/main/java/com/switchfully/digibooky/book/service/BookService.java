@@ -1,10 +1,12 @@
 package com.switchfully.digibooky.book.service;
 
+import com.switchfully.digibooky.book.domain.Author;
 import com.switchfully.digibooky.book.domain.Book;
 import com.switchfully.digibooky.book.domain.BookRepository;
-import com.switchfully.digibooky.book.exceptions.NoAuthorByIdException;
-import com.switchfully.digibooky.book.exceptions.NoBookByAuthorException;
+import com.switchfully.digibooky.book.exceptions.NoMemberWithThatIdException;
+import com.switchfully.digibooky.book.exceptions.NullAuthorException;
 import com.switchfully.digibooky.book.exceptions.UnauthorizedEndPointException;
+import com.switchfully.digibooky.book.service.dto.AuthorDto;
 import com.switchfully.digibooky.book.service.dto.BookDto;
 import com.switchfully.digibooky.book.service.mapper.AuthorMapper;
 import com.switchfully.digibooky.book.service.mapper.BookMapper;
@@ -52,13 +54,21 @@ public class BookService {
         return bookMapper.toDto(listOfBooks);
     }
 
-    public List<BookDto> getByAuthor(String authorId){
-        if (authorId == null){
-            throw new NoBookByAuthorException();
+    public List<BookDto> getByAuthor(AuthorDto authorDto){
+        if (authorDto == null){
+            throw new NullAuthorException();
         }
 
-        List<Book> listOfBooks = bookRepository.getByAuthor(authorId);
+        Author authorRegex = getAuthorRegexFromAuthorDtoAsterisk(authorDto);
+        List<Book> listOfBooks = bookRepository.getByAuthor(authorRegex);
         return bookMapper.toDto(listOfBooks);
+    }
+
+    public Author getAuthorRegexFromAuthorDtoAsterisk(AuthorDto authorDtoAsterisk){
+        String regexFirstname = changeStringWithAsteriskToRegex(authorDtoAsterisk.getFirstname());
+        String regexLastname = changeStringWithAsteriskToRegex(authorDtoAsterisk.getLastname());
+
+        return new Author(regexFirstname, regexLastname);
     }
 
     public BookDto save(BookDto bookDto, String id){
@@ -97,15 +107,13 @@ public class BookService {
 
     public Role getRoleOfMemberById(String id){
         if (memberRepository.getMemberById(UUID.fromString(id)) == null){
-            throw new NoAuthorByIdException();
+            throw new NoMemberWithThatIdException();
         }
         return memberRepository.getMemberById(UUID.fromString(id)).getRole();
     }
 
-    public List<BookDto> delete(String input, String id, String typeOfDelete) {
-        if (getRoleOfMemberById(id) == Role.MEMBER){
-            throw new UnauthorizedEndPointException();
-        }
+    public List<BookDto> deleteOrRestore(String input, String id, String typeOfDelete) {
+        checkAuthorizationForTheMember(id);
 
         List<BookDto> listOfBookToDelete = switch(typeOfDelete){
             case "isbn" -> getByIsbn(input);
@@ -114,5 +122,11 @@ public class BookService {
 
         List<Book> listOfDeletedBooks = bookRepository.delete(bookMapper.fromDto(listOfBookToDelete));
         return bookMapper.toDto(listOfDeletedBooks);
+    }
+
+    private void checkAuthorizationForTheMember(String id) {
+        if (getRoleOfMemberById(id) == Role.MEMBER){
+            throw new UnauthorizedEndPointException();
+        }
     }
 }

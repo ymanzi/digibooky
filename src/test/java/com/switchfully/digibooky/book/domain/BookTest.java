@@ -27,19 +27,19 @@ public class BookTest {
     }
 
     @Test
-    void createBookWithEmptyAuthorLastname_thenRaiseNoTitleForBookException() {
+    void createBookWithEmptyAuthorLastname_thenRaiseNoLastnameForAuthorException() {
         //Then
         assertThrows(NoLastnameForAuthorException.class, () -> new Book("isbn", "title", new Author("first", ""), "summary"));
     }
 
     @Test
-    void createBookWithBlankAuthorLastname_thenRaiseNoTitleForBookException() {
+    void createBookWithBlankAuthorLastname_thenRaiseNoLastnameForAuthorException() {
         //Then
         assertThrows(NoLastnameForAuthorException.class, () -> new Book("isbn", "title", new Author("first", "     "), "summary"));
     }
 
     @Test
-    void createBookWithNullAuthorLastname_thenRaiseNoTitleForBookException() {
+    void createBookWithNullAuthorLastname_thenRaiseNoLastnameForAuthorException() {
         //Then
         assertThrows(NoLastnameForAuthorException.class, () -> new Book("isbn", "title", new Author("first", null), "summary"));
     }

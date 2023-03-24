@@ -1,8 +1,7 @@
 package com.switchfully.digibooky.book.domain;
 
-import com.switchfully.digibooky.book.exceptions.NoBookByAuthorException;
-import com.switchfully.digibooky.book.exceptions.NoBookByIsbnException;
-import com.switchfully.digibooky.book.exceptions.NoBookByTitleException;
+import com.switchfully.digibooky.book.exceptions.BookWithThisIsbnAlreadyExist;
+import com.switchfully.digibooky.book.exceptions.CanNotUpdateNonExistingBook;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -30,7 +29,8 @@ public class BookRepository {
     }
 
     public Book save(Book book){
-        booksByIsbn.put(book.getIsbn(), book);
+        throwErrorIfBookExists(book);
+        Book savedBook = booksByIsbn.put(book.getIsbn(), book);
         return book;
     }
 
@@ -41,35 +41,46 @@ public class BookRepository {
                 .filter(book -> !book.isDeleted())
                 .filter(book -> checkWildcard(book.getIsbn(), isbn))
                 .collect(Collectors.toList());
-
-        return checkIfBookExists(listOfFoundBooks, "isbn");
+        return listOfFoundBooks;
     }
 
     public List<Book> getByTitle(String title){
-        List<Book> listOfFoundBooks = booksByIsbn
+        return  booksByIsbn
                 .values()
                 .stream()
                 .filter(book -> !book.isDeleted())
                 .filter(book -> checkWildcard(book.getTitle(), title))
                 .collect(Collectors.toList());
-
-        return checkIfBookExists(listOfFoundBooks, "title");
     }
 
-    public List<Book> getByAuthor(String authorId){
-        List<Book> listOfFoundBooks = booksByIsbn
+    public List<Book> getByAuthor(Author author){
+        return booksByIsbn
                 .values()
                 .stream()
                 .filter(book -> !book.isDeleted())
-                .filter(book -> String.valueOf(book.getAuthor().getUserId()).equals(authorId) )
+                .filter(book -> authorIsEqual(author, book))
                 .collect(Collectors.toList());
+    }
 
-        return checkIfBookExists(listOfFoundBooks, "author");
+    private boolean authorIsEqual(Author author, Book book) {
+        if (!author.getFirstname().isBlank() && !author.getLastname().isBlank()) {
+            return checkWildcard(book.getAuthor().getFirstname(), author.getFirstname()) && checkWildcard(book.getAuthor().getLastname(), author.getLastname());
+        }
+        if (author.getFirstname().isBlank() && !author.getLastname().isBlank()) {
+            return checkWildcard(book.getAuthor().getLastname(), author.getLastname());
+        }
+        if (!author.getFirstname().isBlank() && author.getLastname().isBlank()) {
+            return checkWildcard(book.getAuthor().getFirstname(), author.getFirstname());
+        }
+        return false;
     }
 
     public Book update(Book updatedBook){
+        if (!checkIfBookExist(updatedBook)) {
+            throw new CanNotUpdateNonExistingBook();
+        }
         booksByIsbn.put(updatedBook.getIsbn(), updatedBook);
-        return booksByIsbn.get(updatedBook.getIsbn());
+        return updatedBook;
     }
 
     public Book delete(Book bookToDelete){
@@ -84,15 +95,14 @@ public class BookRepository {
                 .toList();
     }
 
-    public List<Book> checkIfBookExists(List<Book> listOfBooks, String typeOfException){
-        if (listOfBooks == null /*|| listOfBooks.isDeleted()*/){
-            switch(typeOfException){
-                case "isbn" -> throw new NoBookByIsbnException();
-                case "title" -> throw new NoBookByTitleException();
-                case "author" -> throw new NoBookByAuthorException();
-            }
+    public void throwErrorIfBookExists(Book book){
+        if (checkIfBookExist(book)) {
+            throw new BookWithThisIsbnAlreadyExist();
         }
-        return listOfBooks;
+    }
+    
+    public boolean checkIfBookExist(Book book){
+        return booksByIsbn.containsKey(book.getIsbn());
     }
 
     public boolean checkWildcard(String stringToCheck, String regexString){
